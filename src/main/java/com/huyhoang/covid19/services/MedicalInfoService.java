@@ -24,4 +24,16 @@ public class MedicalInfoService {
 	public MedicalInfo getDetailMedicalInfo(Integer id_medicalinfo) {
 		return medicalInfoDAO.getDetailMedicalInfo(id_medicalinfo);
 	}
+	
+	public MedicalInfo addMedicalInfo(Integer id_user, MedicalInfo data) {
+		return medicalInfoDAO.addMedicalInfo(id_user, data);
+	}
+	
+	public MedicalInfo updateMedicalInfo(Integer id_user, MedicalInfo data) {
+		return medicalInfoDAO.updateMedicalInfo(id_user, data);
+	}
+	
+	public Boolean deleteMedicalInfo(Integer id_user, MedicalInfo data) {
+		return medicalInfoDAO.deleteMedicalInfo(id_user, data);
+	}
 }

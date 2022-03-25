@@ -1,5 +1,6 @@
 package com.huyhoang.covid19.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -46,4 +47,47 @@ public class MedicalInfoDAO {
 			return null;
 		}
 	}
+	
+	public MedicalInfo addMedicalInfo(Integer id_user, MedicalInfo data) {
+		Session session = sessionFactory.getCurrentSession();
+		Date date = new Date();
+		MedicalInfo medicalInfo = new MedicalInfo();
+		medicalInfo.setId_user(id_user);
+		medicalInfo.setName(data.getName());
+		medicalInfo.setInfo(data.getInfo());
+		medicalInfo.setEnabled(true);
+		medicalInfo.setCreated_at(date);
+		medicalInfo.setUpdated_at(date);
+		session.save(medicalInfo);
+		
+		return medicalInfo;
+		
+	}
+	
+	public MedicalInfo updateMedicalInfo(Integer id_user, MedicalInfo data) {
+		Session session = sessionFactory.getCurrentSession();
+		Date date = new Date();
+		MedicalInfo medicalInfo = session.get(MedicalInfo.class, data.getId());
+		medicalInfo.setId_user(id_user);
+		medicalInfo.setName(data.getName());
+		medicalInfo.setInfo(data.getInfo());
+		medicalInfo.setEnabled(true);
+		medicalInfo.setCreated_at(date);
+		medicalInfo.setUpdated_at(date);
+		session.save(medicalInfo);
+		
+		return medicalInfo;
+	}
+	
+	public Boolean deleteMedicalInfo(Integer id_user, MedicalInfo data) {
+		Session session = sessionFactory.getCurrentSession();
+		MedicalInfo medicalInfo = session.get(MedicalInfo.class, data.getId());
+		if (medicalInfo != null && id_user == data.getId_user()) {
+			session.delete(medicalInfo);
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 }
