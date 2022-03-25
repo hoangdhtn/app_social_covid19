@@ -179,7 +179,7 @@ public class UserController {
 				httpStatus = HttpStatus.BAD_REQUEST;
 			}
 		} catch (Exception ex) {
-			System.out.print(ex);
+			//System.out.print(ex);
 			result = "Server Error";
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}

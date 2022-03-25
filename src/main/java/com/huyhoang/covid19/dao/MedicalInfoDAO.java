@@ -19,7 +19,7 @@ public class MedicalInfoDAO {
 	private SessionFactory sessionFactory;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes"})
-	public List<MedicalInfo> getMedicalInfo(Users user) {
+	public List<MedicalInfo> getMedicalInfos(Users user) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "from MedicalInfo where id_user = :id";
 		Query query = session.createQuery(hql, MedicalInfo.class);
@@ -33,5 +33,17 @@ public class MedicalInfoDAO {
 			return null;
 		}
 		
+	}
+	
+	public MedicalInfo getDetailMedicalInfo(Integer id_medicalinfo) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		MedicalInfo medicalInfo = session.get(MedicalInfo.class, id_medicalinfo);
+		
+		if(medicalInfo != null) {
+			return medicalInfo;
+		}else {
+			return null;
+		}
 	}
 }

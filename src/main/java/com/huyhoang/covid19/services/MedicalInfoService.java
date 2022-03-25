@@ -17,7 +17,11 @@ public class MedicalInfoService {
 	@Autowired
 	private MedicalInfoDAO medicalInfoDAO;
 	
-	public List<MedicalInfo> getMedicalInfo(Users user){
-		return medicalInfoDAO.getMedicalInfo(user);
+	public List<MedicalInfo> getMedicalInfos(Users user){
+		return medicalInfoDAO.getMedicalInfos(user);
+	}
+	
+	public MedicalInfo getDetailMedicalInfo(Integer id_medicalinfo) {
+		return medicalInfoDAO.getDetailMedicalInfo(id_medicalinfo);
 	}
 }
