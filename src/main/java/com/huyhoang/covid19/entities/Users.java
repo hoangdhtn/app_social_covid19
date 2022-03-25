@@ -66,6 +66,7 @@ public class Users implements java.io.Serializable {
 	@Column(name = "updated_at")
 	private Date updated_at;
 	
+	//Role
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "users_roles",
 	joinColumns = {@JoinColumn(name = "user")},
