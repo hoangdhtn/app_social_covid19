@@ -77,10 +77,6 @@ private static final long serialVersionUID = 1L;
 		this.updated_at = updated_at;
 	}
 
-	public MedicalInfo getMedicalinfo() {
-		return medicalinfo;
-	}
-
 	public void setMedicalinfo(MedicalInfo medicalinfo) {
 		this.medicalinfo = medicalinfo;
 	}
