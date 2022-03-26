@@ -1,12 +1,17 @@
 package com.huyhoang.covid19.entities;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -37,6 +42,9 @@ public class MedicalInfo implements java.io.Serializable{
 
 	@Column(name = "updated_at")
 	private Date updated_at;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "medicalinfo", cascade = CascadeType.ALL)
+	private Set<MedicalInfo_Img> listImg = new HashSet<>();
 	
 	public MedicalInfo() {
 		
@@ -106,9 +114,14 @@ public class MedicalInfo implements java.io.Serializable{
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
-	
-	
-	
-	
-	
+
+	public Set<MedicalInfo_Img> getListImg() {
+		return listImg;
+	}
+
+	public void setListImg(Set<MedicalInfo_Img> listImg) {
+		this.listImg = listImg;
+	}
+
+		
 }

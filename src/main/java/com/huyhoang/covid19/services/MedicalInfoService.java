@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.huyhoang.covid19.dao.MedicalInfoDAO;
 import com.huyhoang.covid19.entities.MedicalInfo;
@@ -25,8 +26,8 @@ public class MedicalInfoService {
 		return medicalInfoDAO.getDetailMedicalInfo(id_medicalinfo);
 	}
 	
-	public MedicalInfo addMedicalInfo(Integer id_user, MedicalInfo data) {
-		return medicalInfoDAO.addMedicalInfo(id_user, data);
+	public MedicalInfo addMedicalInfo(Integer id_user, MedicalInfo data, MultipartFile[] files) {
+		return medicalInfoDAO.addMedicalInfo(id_user, data, files);
 	}
 	
 	public MedicalInfo updateMedicalInfo(Integer id_user, MedicalInfo data) {

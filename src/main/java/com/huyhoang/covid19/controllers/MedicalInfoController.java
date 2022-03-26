@@ -2,12 +2,8 @@ package com.huyhoang.covid19.controllers;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,53 +88,10 @@ public class MedicalInfoController {
 			@ModelAttribute MedicalInfo data, @RequestParam("files") MultipartFile[] files) {
 		HttpStatus httpStatus = null;
 		String result = "";
-		
-		
-		// Upload hình ảnh
-		File localfile = new File("");
-		String uploadRootPath = localfile.getAbsolutePath() + "\\uploads\\";
-		System.out.println("Current working directory : " + uploadRootPath);
-
-		File uploadRootDir = new File(uploadRootPath);
-		// Tạo thư mục gốc upload nếu nó không tồn tại.
-		if (!uploadRootDir.exists()) {
-			uploadRootDir.mkdirs();
-		}
-		
-		MultipartFile[] fileDatas = files;
-		// 
-		List<File> uploadedFiles = new ArrayList<File>();
-		List<String> failedFiles = new ArrayList<String>();
-
-		for (MultipartFile fileData : fileDatas) {
-
-			// Tên file gốc tại Client.
-			String name = fileData.getOriginalFilename();
-			System.out.println("Client File Name = " + name);
-
-			if (name != null && name.length() > 0) {
-				try {
-					// Tạo file tại Server.
-					String changeName = LocalTime.now().toString().replaceAll("[^A-Za-z0-9]","");
-					String nameupString =  changeName + name;
-					File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator + nameupString.toLowerCase());
-
-					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-					stream.write(fileData.getBytes());
-					stream.close();
-					// 
-					uploadedFiles.add(serverFile);
-					System.out.println("Write file: " + serverFile);
-				} catch (Exception e) {
-					System.out.println("Error Write file: " + name);
-					failedFiles.add(name);
-				}
-			}
-		}
 
 		// Add medical
 		try {
-			if (medicalInfoService.addMedicalInfo(id_user, data) != null) {
+			if (medicalInfoService.addMedicalInfo(id_user, data, files) != null) {
 				result = "Add medical success";
 				httpStatus = HttpStatus.OK;
 			} else {

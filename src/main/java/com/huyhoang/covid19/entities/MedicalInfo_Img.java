@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,9 +22,6 @@ private static final long serialVersionUID = 1L;
 	@Column(name = "id")
 	private Integer id;
 	
-	@Column(name = "id_medicalinfo")
-	private Integer id_medicalinfo;
-	
 	@Column(name = "name")
 	private String name;
 	
@@ -32,12 +31,15 @@ private static final long serialVersionUID = 1L;
 	@Column(name = "updated_at")
 	private Date updated_at;
 	
+	@ManyToOne
+	@JoinColumn(name = "id_medicalinfo")
+	private MedicalInfo medicalinfo;
+	
 	public MedicalInfo_Img() {
 		
 	}
 
-	public MedicalInfo_Img(Integer id_medicalinfo, String name, Date created_at, Date updated_at) {
-		this.id_medicalinfo = id_medicalinfo;
+	public MedicalInfo_Img(String name, Date created_at, Date updated_at) {
 		this.name = name;
 		this.created_at = created_at;
 		this.updated_at = updated_at;
@@ -49,14 +51,6 @@ private static final long serialVersionUID = 1L;
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Integer getId_medicalinfo() {
-		return id_medicalinfo;
-	}
-
-	public void setId_medicalinfo(Integer id_medicalinfo) {
-		this.id_medicalinfo = id_medicalinfo;
 	}
 
 	public String getName() {
@@ -82,7 +76,14 @@ private static final long serialVersionUID = 1L;
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
-	
-	
+
+	public MedicalInfo getMedicalinfo() {
+		return medicalinfo;
+	}
+
+	public void setMedicalinfo(MedicalInfo medicalinfo) {
+		this.medicalinfo = medicalinfo;
+	}
+
 	
 }
