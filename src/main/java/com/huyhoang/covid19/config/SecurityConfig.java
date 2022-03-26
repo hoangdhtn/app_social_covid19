@@ -60,17 +60,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// hasRole('ROLE_MODERATOR')
 		http.antMatcher("/api/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.antMatchers(HttpMethod.GET, "/api/users").access("hasRole('ROLE_ADMIN')") // User
+				// User
+				.antMatchers(HttpMethod.GET, "/api/users").access("hasRole('ROLE_ADMIN')") 
 				.antMatchers(HttpMethod.GET, "/api/users/**")
 				.access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_AUTHOR') or hasRole('ROLE_MODERATOR')")
 				.antMatchers(HttpMethod.POST, "/api/users").access("hasRole('ROLE_ADMIN')")
 				.antMatchers(HttpMethod.DELETE, "/api/users/**").access("hasRole('ROLE_ADMIN')")
-				.antMatchers(HttpMethod.POST, "/api/follow/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')") // Follow
+				// Follow
+				.antMatchers(HttpMethod.POST, "/api/follow/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')") 
 				.antMatchers(HttpMethod.DELETE, "/api/follow/**").access("hasRole('ROLE_USER')")
-				.antMatchers(HttpMethod.GET, "/api/medical**").access("hasRole('ROLE_USER')") // Medical
+				 // Medical
+				.antMatchers(HttpMethod.GET, "/api/medical**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.POST, "/api/medical**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.PUT, "/api/medical**").access("hasRole('ROLE_USER')")
-				.antMatchers(HttpMethod.DELETE, "/api/medical**").access("hasRole('ROLE_USER')").and()
+				.antMatchers(HttpMethod.DELETE, "/api/medical**").access("hasRole('ROLE_USER')")
+				.and()
 				.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
 	}

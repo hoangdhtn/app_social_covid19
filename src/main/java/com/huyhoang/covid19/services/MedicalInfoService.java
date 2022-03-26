@@ -33,7 +33,7 @@ public class MedicalInfoService {
 		return medicalInfoDAO.updateMedicalInfo(id_user, data);
 	}
 	
-	public Boolean deleteMedicalInfo(Integer id_user, MedicalInfo data) {
-		return medicalInfoDAO.deleteMedicalInfo(id_user, data);
+	public Boolean deleteMedicalInfo(Integer id_user, Integer id_medical) {
+		return medicalInfoDAO.deleteMedicalInfo(id_user, id_medical);
 	}
 }

@@ -79,10 +79,10 @@ public class MedicalInfoDAO {
 		return medicalInfo;
 	}
 	
-	public Boolean deleteMedicalInfo(Integer id_user, MedicalInfo data) {
+	public Boolean deleteMedicalInfo(Integer id_user, Integer id_medical) {
 		Session session = sessionFactory.getCurrentSession();
-		MedicalInfo medicalInfo = session.get(MedicalInfo.class, data.getId());
-		if (medicalInfo != null && id_user == data.getId_user()) {
+		MedicalInfo medicalInfo = session.get(MedicalInfo.class, id_medical);
+		if (medicalInfo != null && id_user == medicalInfo.getId_user()) {
 			session.delete(medicalInfo);
 			return true;
 		}else {
