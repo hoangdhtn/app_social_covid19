@@ -3,6 +3,9 @@ package com.huyhoang.covid19.dao;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashSet;
@@ -144,6 +147,19 @@ public class MedicalInfoDAO {
 		Session session = sessionFactory.getCurrentSession();
 		MedicalInfo medicalInfo = session.get(MedicalInfo.class, id_medical);
 		if (medicalInfo != null && id_user == medicalInfo.getId_user()) {
+			
+			Set<MedicalInfo_Img> medicalInfo_Imgs = medicalInfo.getListImg();
+			
+			for(MedicalInfo_Img img : medicalInfo_Imgs)
+			{
+				try {
+					Files.deleteIfExists(Paths.get("uploads", img.getName()));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 			session.delete(medicalInfo);
 			return true;
 		} else {

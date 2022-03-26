@@ -1,9 +1,5 @@
 package com.huyhoang.covid19.controllers;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,12 +106,14 @@ public class MedicalInfoController {
 	@RequestMapping(value = "/medical/{id_user}", method = RequestMethod.PUT, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<String> updateMedicalInfo(@PathVariable("id_user") Integer id_user,
+	public ResponseEntity<MedicalInfo> updateMedicalInfo(@PathVariable("id_user") Integer id_user,
 			@RequestBody MedicalInfo data) {
 		HttpStatus httpStatus = null;
 		String result = "";
+		MedicalInfo medicalInfo = new MedicalInfo();
 		try {
-			if (medicalInfoService.updateMedicalInfo(id_user, data) != null && id_user == data.getId_user()) {
+			if (id_user == data.getId_user()) {
+				medicalInfo = medicalInfoService.updateMedicalInfo(id_user, data);
 				result = "Update medical success";
 				httpStatus = HttpStatus.OK;
 			} else {
@@ -127,7 +125,7 @@ public class MedicalInfoController {
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
-		return new ResponseEntity<String>(result, httpStatus);
+		return new ResponseEntity<MedicalInfo>(medicalInfo, httpStatus);
 	}
 
 	// Delete medical
