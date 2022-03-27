@@ -1,14 +1,19 @@
 package com.huyhoang.covid19.entities;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,25 +24,31 @@ public class Posts {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "content")
 	private String content;
-	
+
 	@Column(name = "enabled")
 	private Boolean enabled;
-	
+
 	@Column(name = "created_at")
 	private Date created_at;
 
 	@Column(name = "updated_at")
 	private Date updated_at;
-	
+
+	// n - 1 : User
 	@ManyToOne
 	@JoinColumn(name = "id_user", nullable = false)
 	private Users user;
-	
+
+
+	// 1 - n: Posts Img
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "post", cascade = CascadeType.ALL)
+	private Set<Posts_Img> posts_imgs = new HashSet<>();
+
 	public Posts() {
-		
+
 	}
 
 	public Posts(String content, Boolean enabled, Date created_at, Date updated_at) {
@@ -54,7 +65,6 @@ public class Posts {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 
 	public String getContent() {
 		return content;
@@ -87,8 +97,18 @@ public class Posts {
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
+
+	public Set<Posts_Img> getPosts_imgs() {
+		return posts_imgs;
+	}
+
+	public void setPosts_imgs(Set<Posts_Img> posts_imgs) {
+		this.posts_imgs = posts_imgs;
+	}
 	
-	
-	
-	
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+
 }

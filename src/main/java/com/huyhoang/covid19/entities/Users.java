@@ -216,10 +216,6 @@ public class Users implements java.io.Serializable {
 		this.roles = roles;
 	}
 
-	public Set<Posts> getPosts() {
-		return posts;
-	}
-
 	public void setPosts(Set<Posts> posts) {
 		this.posts = posts;
 	}
