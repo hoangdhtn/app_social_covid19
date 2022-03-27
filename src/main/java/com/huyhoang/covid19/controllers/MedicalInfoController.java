@@ -109,16 +109,13 @@ public class MedicalInfoController {
 	public ResponseEntity<MedicalInfo> updateMedicalInfo(@PathVariable("id_user") Integer id_user,
 			@RequestBody MedicalInfo data) {
 		HttpStatus httpStatus = null;
-		String result = "";
 		MedicalInfo medicalInfo = new MedicalInfo();
 		try {
 			if (id_user == data.getId_user()) {
 				medicalInfo = medicalInfoService.updateMedicalInfo(id_user, data);
-				result = "Update medical success";
 				httpStatus = HttpStatus.OK;
 			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;
-				result = "Update medical fail";
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

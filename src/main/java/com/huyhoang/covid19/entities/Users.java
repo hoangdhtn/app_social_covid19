@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -73,6 +74,10 @@ public class Users implements java.io.Serializable {
 	inverseJoinColumns = {@JoinColumn(name ="role")})
 	private Set<Role> roles = new HashSet<>();
 	
+	
+	//Post
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<Posts> posts = new HashSet<>();
 	
 	
 	public Users() {
@@ -211,5 +216,14 @@ public class Users implements java.io.Serializable {
 		this.roles = roles;
 	}
 
+	public Set<Posts> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(Set<Posts> posts) {
+		this.posts = posts;
+	}
+
+	
 
 }
