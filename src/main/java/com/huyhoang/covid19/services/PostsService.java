@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.huyhoang.covid19.dao.PostsDAO;
 import com.huyhoang.covid19.entities.Posts;
+import com.huyhoang.covid19.entities.Posts_Cmt;
 
 @Service
 @Transactional
@@ -39,5 +40,9 @@ public class PostsService {
 	
 	public Boolean deletePost(String username, Integer id_post) {
 		return postsDAO.deletePost(username, id_post);
+	}
+	
+	public List<Posts_Cmt> getCommentPost(Integer id_post){
+		return postsDAO.getCommentPost(id_post);
 	}
 }

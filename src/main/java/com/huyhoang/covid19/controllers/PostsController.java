@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.huyhoang.covid19.entities.Posts;
+import com.huyhoang.covid19.entities.Posts_Cmt;
 import com.huyhoang.covid19.entities.Users;
 import com.huyhoang.covid19.services.JwtService;
 import com.huyhoang.covid19.services.PostsService;
@@ -172,4 +173,28 @@ public class PostsController {
 
 			return new ResponseEntity<String>(result, httpStatus);
 		}
+		
+	// Get comment post
+		@RequestMapping(value = "/comment/{id_post}", method = RequestMethod.GET, produces = {
+				MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+		@ResponseBody
+		public ResponseEntity<List<Posts_Cmt>> getCommentPost(
+				@PathVariable("id_post") Integer id_post) {
+			HttpStatus httpStatus = null;
+			List<Posts_Cmt> list = null;
+			try {
+				if (postsService.getCommentPost(id_post) != null) {
+					list = postsService.getCommentPost(id_post);
+					httpStatus = HttpStatus.OK;
+				} else {
+					httpStatus = HttpStatus.BAD_REQUEST;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+
+			return new ResponseEntity<List<Posts_Cmt>>(list, httpStatus);
+		}
+		
 }

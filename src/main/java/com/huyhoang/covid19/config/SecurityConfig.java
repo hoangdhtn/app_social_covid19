@@ -84,6 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// Like
 				.antMatchers(HttpMethod.POST, "/api/like**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.DELETE, "/api/like**").access("hasRole('ROLE_USER')")
+				// Comment
+				.antMatchers(HttpMethod.GET, "/api/comment**").access("hasRole('ROLE_USER')")
 				.and()
 				.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());

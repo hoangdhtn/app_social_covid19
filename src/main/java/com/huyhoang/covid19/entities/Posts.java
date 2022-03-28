@@ -49,8 +49,12 @@ public class Posts {
 	private Set<Posts_Img> posts_imgs = new HashSet<>();
 	
 	// 1 - n: Post Like
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval=true)
 	private Set<Likes> likes = new HashSet<>();
+	
+	// 1 - n: Post cmt
+	@OneToMany(fetch =  FetchType.EAGER, mappedBy = "post", cascade = CascadeType.ALL)
+	private Set<Posts_Cmt> posts_Cmts = new HashSet<>();
 
 	public Posts() {
 
@@ -119,13 +123,15 @@ public class Posts {
 		return user;
 	}
 
-	public Set<Likes> getLikes() {
-		return likes;
-	}
 
 	public void setLikes(Set<Likes> likes) {
 		this.likes = likes;
 	}
+
+	public void setPosts_Cmts(Set<Posts_Cmt> posts_Cmts) {
+		this.posts_Cmts = posts_Cmts;
+	}
+
 
 	
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.huyhoang.covid19.entities.Posts;
+import com.huyhoang.covid19.entities.Posts_Cmt;
 import com.huyhoang.covid19.entities.Posts_Img;
 import com.huyhoang.covid19.entities.Users;
 
@@ -29,7 +30,7 @@ public class PostsDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	@Autowired
 	private AuthDAO authDAO;
 
@@ -162,7 +163,7 @@ public class PostsDAO {
 		Date date = new Date();
 		Posts post = session.get(Posts.class, postForm.getId());
 		Users user = authDAO.loadUsername(username);
-		
+
 		Users user_post = post.getUser();
 		if (post != null && user_post.getId() == user.getId()) {
 			post.setContent(postForm.getContent());
@@ -184,11 +185,13 @@ public class PostsDAO {
 			Posts post = session.get(Posts.class, id_post);
 			Users user_post = post.getUser();
 
-			if (post != null && user.getId() == user_post.getId() || AuthorityUtils
-					.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities())
-					.contains("ROLE_ADMIN") || AuthorityUtils
-					.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities())
-					.contains("ROLE_MODERATOR")) {
+			if (post != null && user.getId() == user_post.getId()
+					|| AuthorityUtils
+							.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities())
+							.contains("ROLE_ADMIN")
+					|| AuthorityUtils
+							.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities())
+							.contains("ROLE_MODERATOR")) {
 				Set<Posts_Img> posts_Imgs = post.getPosts_imgs();
 
 				for (Posts_Img img : posts_Imgs) {
@@ -211,4 +214,52 @@ public class PostsDAO {
 		}
 
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<Posts_Cmt> getCommentPost(Integer id_post){
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			String hql = "from Posts_Cmt where id_post = :id_post order by id desc";
+			Query query = session.createQuery(hql, Posts_Cmt.class);
+			query.setParameter("id_post", id_post);
+			
+			List<Posts_Cmt> list = query.list();
+			if (list != null & list.size() > 0) {
+				return list;
+			}else {
+				return null;
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+	}
+	
+//	public Boolean addCommentPost(String username, Integer id_post, Posts_Cmt data) {
+//		Session session = sessionFactory.getCurrentSession();
+//		
+//		Date date = new Date();
+//		Users user = authDAO.loadUsername(username);
+//		Posts post = session.get(Posts.class, id_post);
+//		
+//		if (post != null ) {
+//			try {
+//				Posts_Cmt pCmt = new Posts_Cmt();
+//				pCmt.setContent(data.getContent());
+//				pCmt.setPost(post);
+//				pCmt.setUser(user);
+//				pCmt.setCreated_at(date);
+//				pCmt.setUpdated_at(date);
+//				session.save(pCmt);
+//				return true;
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//				return false;
+//			}
+//		}else {
+//			return false;
+//		}
+//	}
 }

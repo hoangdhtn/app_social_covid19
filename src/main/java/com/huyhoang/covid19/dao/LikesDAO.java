@@ -63,7 +63,10 @@ public class LikesDAO {
 		List<Likes> list = query.list();
 
 		if (list != null && list.size() > 0 && list.get(0).getId_user() == user.getId()) {
-			session.delete(list.get(0));
+			session.clear();
+			
+			session.createQuery("delete from Likes where id_post = :id_post")
+			.setParameter("id_post", id_post).executeUpdate();
 			return true;
 		} else {
 			return false;

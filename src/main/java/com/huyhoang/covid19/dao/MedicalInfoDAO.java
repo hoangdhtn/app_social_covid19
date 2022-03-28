@@ -136,16 +136,21 @@ public class MedicalInfoDAO {
 		Session session = sessionFactory.getCurrentSession();
 		Date date = new Date();
 		Users user = authDAO.loadUsername(username);
-		MedicalInfo medicalInfo = session.get(MedicalInfo.class, data.getId());
-		medicalInfo.setId_user(user.getId());
-		medicalInfo.setName(data.getName());
-		medicalInfo.setInfo(data.getInfo());
-		medicalInfo.setEnabled(true);
-		medicalInfo.setCreated_at(date);
-		medicalInfo.setUpdated_at(date);
-		session.save(medicalInfo);
+		try {
+			MedicalInfo medicalInfo = session.get(MedicalInfo.class, data.getId());
+			medicalInfo.setId_user(user.getId());
+			medicalInfo.setName(data.getName());
+			medicalInfo.setInfo(data.getInfo());
+			medicalInfo.setEnabled(true);
+			medicalInfo.setCreated_at(date);
+			medicalInfo.setUpdated_at(date);
+			session.save(medicalInfo);
 
-		return medicalInfo;
+			return medicalInfo;		
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
 	}
 
 	public Boolean deleteMedicalInfo(String username, Integer id_medical) {

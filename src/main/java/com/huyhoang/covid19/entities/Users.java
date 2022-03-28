@@ -80,6 +80,10 @@ public class Users implements java.io.Serializable {
 	private Set<Posts> posts = new HashSet<>();
 	
 	
+	//Comment post
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<Posts_Cmt> posts_Cmts = new HashSet<>();
+	
 	public Users() {
 
 	}
@@ -208,9 +212,9 @@ public class Users implements java.io.Serializable {
 		this.updated_at = updated_at;
 	}
 
-	public Set<Role> getRoles() {
-		return roles;
-	}
+//	public Set<Role> getRoles() {
+//		return roles;
+//	}
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
@@ -218,6 +222,10 @@ public class Users implements java.io.Serializable {
 
 	public void setPosts(Set<Posts> posts) {
 		this.posts = posts;
+	}
+
+	public void setPosts_Cmts(Set<Posts_Cmt> posts_Cmts) {
+		this.posts_Cmts = posts_Cmts;
 	}
 
 	
