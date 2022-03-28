@@ -237,29 +237,29 @@ public class PostsDAO {
 		}
 	}
 	
-//	public Boolean addCommentPost(String username, Integer id_post, Posts_Cmt data) {
-//		Session session = sessionFactory.getCurrentSession();
-//		
-//		Date date = new Date();
-//		Users user = authDAO.loadUsername(username);
-//		Posts post = session.get(Posts.class, id_post);
-//		
-//		if (post != null ) {
-//			try {
-//				Posts_Cmt pCmt = new Posts_Cmt();
-//				pCmt.setContent(data.getContent());
-//				pCmt.setPost(post);
-//				pCmt.setUser(user);
-//				pCmt.setCreated_at(date);
-//				pCmt.setUpdated_at(date);
-//				session.save(pCmt);
-//				return true;
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				return false;
-//			}
-//		}else {
-//			return false;
-//		}
-//	}
+	public Boolean addCommentPost(String username, Integer id_post, Posts_Cmt data) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		Date date = new Date();
+		Users user = authDAO.loadUsername(username);
+		Posts post = session.get(Posts.class, id_post);
+		
+		if (post != null ) {
+			try {
+				Posts_Cmt pCmt = new Posts_Cmt();
+				pCmt.setContent(data.getContent());
+				pCmt.setPost(post);
+				pCmt.setUser(user);
+				pCmt.setCreated_at(date);
+				pCmt.setUpdated_at(date);
+				session.save(pCmt);
+				return true;
+			} catch (Exception e) {
+				// TODO: handle exception
+				return false;
+			}
+		}else {
+			return false;
+		}
+	}
 }

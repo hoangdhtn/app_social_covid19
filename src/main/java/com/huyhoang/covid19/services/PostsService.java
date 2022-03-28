@@ -45,4 +45,8 @@ public class PostsService {
 	public List<Posts_Cmt> getCommentPost(Integer id_post){
 		return postsDAO.getCommentPost(id_post);
 	}
+	
+	public Boolean addCommentPost(String username, Integer id_post, Posts_Cmt data) {
+		return postsDAO.addCommentPost(username, id_post, data);
+	}
 }

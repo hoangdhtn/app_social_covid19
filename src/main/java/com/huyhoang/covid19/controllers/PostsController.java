@@ -197,4 +197,28 @@ public class PostsController {
 			return new ResponseEntity<List<Posts_Cmt>>(list, httpStatus);
 		}
 		
+	// Add comment post
+		@RequestMapping(value = "/comment/{id_post}", method = RequestMethod.POST, produces = {
+				MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+		@ResponseBody
+		public ResponseEntity<String> addCommentPost(@RequestHeader("Authorization") String authHeader,
+				@PathVariable("id_post") Integer id_post, @RequestBody Posts_Cmt posts_Cmt) {
+			HttpStatus httpStatus = null;
+			String result = "";
+			String username = jwtService.getUsernameFromToken(authHeader);
+			try {
+				if (postsService.addCommentPost(username, id_post, posts_Cmt)) {
+					result = "Add comment success";
+					httpStatus = HttpStatus.OK;
+				} else {
+					httpStatus = HttpStatus.BAD_REQUEST;
+					result = "Add comment fail";
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+
+			return new ResponseEntity<String>(result, httpStatus);
+		}
 }
