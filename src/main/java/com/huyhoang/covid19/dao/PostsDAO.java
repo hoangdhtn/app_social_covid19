@@ -3,6 +3,8 @@ package com.huyhoang.covid19.dao;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashSet;
@@ -13,6 +15,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +29,9 @@ public class PostsDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	private AuthDAO authDAO;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<Posts> getAllPosts() {
@@ -76,9 +83,10 @@ public class PostsDAO {
 		}
 	}
 
-	public Posts addPost(Integer id_user, Posts data, MultipartFile[] files) {
+	public Posts addPost(String username, Posts data, MultipartFile[] files) {
 		Session session = sessionFactory.getCurrentSession();
 
+		Users user = authDAO.loadUsername(username);
 		Date date = new Date();
 		Posts post = new Posts();
 
@@ -129,10 +137,10 @@ public class PostsDAO {
 			}
 		}
 
-		System.out.println("Hinh anh ne : " + posts_Imgs);
+		// System.out.println("Hinh anh ne : " + posts_Imgs);
 		try {
 			post.setContent(data.getContent());
-			post.setUser(session.get(Users.class, id_user));
+			post.setUser(user);
 			post.setEnabled(true);
 			post.setCreated_at(date);
 			post.setUpdated_at(date);
@@ -144,6 +152,62 @@ public class PostsDAO {
 			System.out.println("Loi ne : " + e);
 			return null;
 
+		}
+
+	}
+
+	public Posts updatePost(String username, Posts postForm) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Date date = new Date();
+		Posts post = session.get(Posts.class, postForm.getId());
+		Users user = authDAO.loadUsername(username);
+		
+		Users user_post = post.getUser();
+		if (post != null && user_post.getId() == user.getId()) {
+			post.setContent(postForm.getContent());
+			post.setEnabled(postForm.getEnabled());
+			post.setCreated_at(date);
+			post.setUpdated_at(date);
+			session.save(post);
+			return post;
+		} else {
+			return null;
+		}
+
+	}
+
+	public Boolean deletePost(String username, Integer id_post) {
+		Session session = sessionFactory.getCurrentSession();
+		Users user = authDAO.loadUsername(username);
+		try {
+			Posts post = session.get(Posts.class, id_post);
+			Users user_post = post.getUser();
+
+			if (post != null && user.getId() == user_post.getId() || AuthorityUtils
+					.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities())
+					.contains("ROLE_ADMIN") || AuthorityUtils
+					.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities())
+					.contains("ROLE_MODERATOR")) {
+				Set<Posts_Img> posts_Imgs = post.getPosts_imgs();
+
+				for (Posts_Img img : posts_Imgs) {
+					try {
+						Files.deleteIfExists(Paths.get("uploads", img.getName()));
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}
+
+				session.delete(post);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
 		}
 
 	}

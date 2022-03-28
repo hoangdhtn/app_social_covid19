@@ -28,6 +28,9 @@ public class MedicalInfoDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	private AuthDAO authDAO;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<MedicalInfo> getMedicalInfos(Users user) {
@@ -58,9 +61,10 @@ public class MedicalInfoDAO {
 		}
 	}
 
-	public MedicalInfo addMedicalInfo(Integer id_user, MedicalInfo data, MultipartFile[] files) {
+	public MedicalInfo addMedicalInfo(String username, MedicalInfo data, MultipartFile[] files) {
 		Session session = sessionFactory.getCurrentSession();
 		Date date = new Date();
+		Users user = authDAO.loadUsername(username);
 		MedicalInfo medicalInfo = new MedicalInfo();
 
 		Set<MedicalInfo_Img> medicalInfo_Imgs = new HashSet<>();
@@ -111,7 +115,7 @@ public class MedicalInfoDAO {
 
 		try {
 
-			medicalInfo.setId_user(id_user);
+			medicalInfo.setId_user(user.getId());
 			medicalInfo.setName(data.getName());
 			medicalInfo.setInfo(data.getInfo());
 			medicalInfo.setEnabled(true);
@@ -128,11 +132,12 @@ public class MedicalInfoDAO {
 
 	}
 
-	public MedicalInfo updateMedicalInfo(Integer id_user, MedicalInfo data) {
+	public MedicalInfo updateMedicalInfo(String username, MedicalInfo data) {
 		Session session = sessionFactory.getCurrentSession();
 		Date date = new Date();
+		Users user = authDAO.loadUsername(username);
 		MedicalInfo medicalInfo = session.get(MedicalInfo.class, data.getId());
-		medicalInfo.setId_user(id_user);
+		medicalInfo.setId_user(user.getId());
 		medicalInfo.setName(data.getName());
 		medicalInfo.setInfo(data.getInfo());
 		medicalInfo.setEnabled(true);
@@ -143,10 +148,11 @@ public class MedicalInfoDAO {
 		return medicalInfo;
 	}
 
-	public Boolean deleteMedicalInfo(Integer id_user, Integer id_medical) {
+	public Boolean deleteMedicalInfo(String username, Integer id_medical) {
 		Session session = sessionFactory.getCurrentSession();
 		MedicalInfo medicalInfo = session.get(MedicalInfo.class, id_medical);
-		if (medicalInfo != null && id_user == medicalInfo.getId_user()) {
+		Users user = authDAO.loadUsername(username);
+		if (medicalInfo != null && user.getId() == medicalInfo.getId_user()) {
 			
 			Set<MedicalInfo_Img> medicalInfo_Imgs = medicalInfo.getListImg();
 			

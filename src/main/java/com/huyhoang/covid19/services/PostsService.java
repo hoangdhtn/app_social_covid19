@@ -29,7 +29,15 @@ public class PostsService {
 		return postsDAO.getAllPostsInWall(id_user);
 	}
 	
-	public Posts addPost(Integer id_user, Posts data, MultipartFile[] files) {
-		return postsDAO.addPost(id_user, data, files);
+	public Posts addPost(String username, Posts data, MultipartFile[] files) {
+		return postsDAO.addPost(username, data, files);
+	}
+	
+	public Posts updatePost(String username, Posts postForm) {
+		return postsDAO.updatePost(username, postForm);
+	}
+	
+	public Boolean deletePost(String username, Integer id_post) {
+		return postsDAO.deletePost(username, id_post);
 	}
 }

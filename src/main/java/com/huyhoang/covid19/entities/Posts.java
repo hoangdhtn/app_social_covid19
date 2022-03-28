@@ -27,6 +27,7 @@ public class Posts {
 
 	@Column(name = "content")
 	private String content;
+	
 
 	@Column(name = "enabled")
 	private Boolean enabled;
@@ -38,7 +39,7 @@ public class Posts {
 	private Date updated_at;
 
 	// n - 1 : User
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name = "id_user", nullable = false)
 	private Users user;
 
@@ -46,6 +47,10 @@ public class Posts {
 	// 1 - n: Posts Img
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "post", cascade = CascadeType.ALL)
 	private Set<Posts_Img> posts_imgs = new HashSet<>();
+	
+	// 1 - n: Post Like
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL)
+	private Set<Likes> likes = new HashSet<>();
 
 	public Posts() {
 
@@ -110,5 +115,17 @@ public class Posts {
 		this.user = user;
 	}
 
+	public Users getUser() {
+		return user;
+	}
 
+	public Set<Likes> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(Set<Likes> likes) {
+		this.likes = likes;
+	}
+
+	
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.huyhoang.covid19.entities.MedicalInfo;
 import com.huyhoang.covid19.entities.Users;
+import com.huyhoang.covid19.services.JwtService;
 import com.huyhoang.covid19.services.MedicalInfoService;
 
 @RestController
@@ -26,6 +28,9 @@ public class MedicalInfoController {
 
 	@Autowired
 	private MedicalInfoService medicalInfoService;
+	
+	@Autowired 
+	private JwtService jwtService = new JwtService();
 
 	// List all medical
 	@RequestMapping(value = "/medical", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -76,18 +81,18 @@ public class MedicalInfoController {
 	}
 
 	// Add medical, sử dụng form data bởi vì cần upload file img
-	@RequestMapping(value = "/medical/{id_user}", method = RequestMethod.POST, produces = {
+	@RequestMapping(value = "/medical", method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,
 			MediaType.MULTIPART_FORM_DATA_VALUE }, consumes = { "multipart/form-data" })
 	@ResponseBody
-	public ResponseEntity<String> addMedicalInfo(@PathVariable("id_user") Integer id_user,
+	public ResponseEntity<String> addMedicalInfo(@RequestHeader("Authorization") String authHeader,
 			@ModelAttribute MedicalInfo data, @RequestParam("files") MultipartFile[] files) {
 		HttpStatus httpStatus = null;
 		String result = "";
-
+		String username = jwtService.getUsernameFromToken(authHeader);
 		// Add medical
 		try {
-			if (medicalInfoService.addMedicalInfo(id_user, data, files) != null) {
+			if (medicalInfoService.addMedicalInfo(username, data, files) != null) {
 				result = "Add medical success";
 				httpStatus = HttpStatus.OK;
 			} else {
@@ -103,16 +108,18 @@ public class MedicalInfoController {
 	}
 
 	// Update medical
-	@RequestMapping(value = "/medical/{id_user}", method = RequestMethod.PUT, produces = {
+	@RequestMapping(value = "/medical", method = RequestMethod.PUT, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<MedicalInfo> updateMedicalInfo(@PathVariable("id_user") Integer id_user,
+	public ResponseEntity<MedicalInfo> updateMedicalInfo(@RequestHeader("Authorization") String authHeader,
 			@RequestBody MedicalInfo data) {
 		HttpStatus httpStatus = null;
 		MedicalInfo medicalInfo = new MedicalInfo();
+		String username = jwtService.getUsernameFromToken(authHeader);
+		
+		medicalInfo = medicalInfoService.updateMedicalInfo(username, data);
 		try {
-			if (id_user == data.getId_user()) {
-				medicalInfo = medicalInfoService.updateMedicalInfo(id_user, data);
+			if (medicalInfo != null) {
 				httpStatus = HttpStatus.OK;
 			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;
@@ -126,15 +133,16 @@ public class MedicalInfoController {
 	}
 
 	// Delete medical
-	@RequestMapping(value = "/medical/{id_user}/{id_medical}", method = RequestMethod.DELETE, produces = {
+	@RequestMapping(value = "/medical/{id_medical}", method = RequestMethod.DELETE, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<String> deleteMedicalInfo(@PathVariable("id_user") Integer id_user,
+	public ResponseEntity<String> deleteMedicalInfo(@RequestHeader("Authorization") String authHeader,
 			@PathVariable("id_medical") Integer id_medical) {
 		HttpStatus httpStatus = null;
 		String result = "";
+		String username = jwtService.getUsernameFromToken(authHeader);
 		try {
-			if (medicalInfoService.deleteMedicalInfo(id_user, id_medical)) {
+			if (medicalInfoService.deleteMedicalInfo(username, id_medical)) {
 				result = "Delete medical success";
 				httpStatus = HttpStatus.OK;
 			} else {

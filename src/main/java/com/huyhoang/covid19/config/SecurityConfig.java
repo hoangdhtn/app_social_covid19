@@ -62,22 +62,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.antMatcher("/api/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
 				// User
-				.antMatchers(HttpMethod.GET, "/api/users").access("hasRole('ROLE_ADMIN')") 
+				.antMatchers(HttpMethod.GET, "/api/users").access("hasRole('ROLE_ADMIN')")
 				.antMatchers(HttpMethod.GET, "/api/users/**")
 				.access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_AUTHOR') or hasRole('ROLE_MODERATOR')")
 				.antMatchers(HttpMethod.POST, "/api/users").access("hasRole('ROLE_ADMIN')")
 				.antMatchers(HttpMethod.DELETE, "/api/users/**").access("hasRole('ROLE_ADMIN')")
 				// Follow
-				.antMatchers(HttpMethod.POST, "/api/follow/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')") 
+				.antMatchers(HttpMethod.POST, "/api/follow/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.DELETE, "/api/follow/**").access("hasRole('ROLE_USER')")
-				 // Medical
+				// Medical
 				.antMatchers(HttpMethod.GET, "/api/medical**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.POST, "/api/medical**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.PUT, "/api/medical**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.DELETE, "/api/medical**").access("hasRole('ROLE_USER')")
-				//Post
+				// Post
 				.antMatchers(HttpMethod.GET, "/api/posts**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.POST, "/api/posts**").access("hasRole('ROLE_USER')")
+				.antMatchers(HttpMethod.PUT, "/api/posts**").access("hasRole('ROLE_USER')")
+				.antMatchers(HttpMethod.DELETE, "/api/posts**")
+				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
+				// Like
+				.antMatchers(HttpMethod.POST, "/api/like**").access("hasRole('ROLE_USER')")
+				.antMatchers(HttpMethod.DELETE, "/api/like**").access("hasRole('ROLE_USER')")
 				.and()
 				.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());

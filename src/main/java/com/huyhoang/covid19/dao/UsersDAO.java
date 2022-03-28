@@ -22,7 +22,7 @@ public class UsersDAO {
 		Users users = (Users) session.get(Users.class, id);
 		return users;
 	}
-
+	
 	public Users addUser(Users data) {
 		Session session = sessionFactory.getCurrentSession();
 		session.save(data);

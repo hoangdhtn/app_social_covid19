@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.huyhoang.covid19.entities.Posts;
 import com.huyhoang.covid19.entities.Users;
+import com.huyhoang.covid19.services.JwtService;
 import com.huyhoang.covid19.services.PostsService;
 
 @RestController
@@ -26,6 +28,9 @@ public class PostsController {
 
 	@Autowired
 	private PostsService postsService;
+	
+	@Autowired 
+	private JwtService jwtService = new JwtService();
 
 	// Get all post
 	@RequestMapping(value = "/posts", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -79,18 +84,20 @@ public class PostsController {
 	}
 
 	// Add post, sử dụng form data bởi vì cần upload file img
-	@RequestMapping(value = "/posts/{id_user}", method = RequestMethod.POST, produces = {
+	@RequestMapping(value = "/posts", method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,
 			MediaType.MULTIPART_FORM_DATA_VALUE }, consumes = { "multipart/form-data" })
 	@ResponseBody
-	public ResponseEntity<String> addPost(@PathVariable("id_user") Integer id_user, @ModelAttribute Posts data,
+	public ResponseEntity<String> addPost(@RequestHeader("Authorization") String authHeader, @ModelAttribute Posts data,
 			@RequestParam("files") MultipartFile[] files) {
+		
+		String username = jwtService.getUsernameFromToken(authHeader);
 		HttpStatus httpStatus = null;
 		String result = "";
 
 		// Add medical
 		try {
-			if (postsService.addPost(id_user, data, files) != null) {
+			if (postsService.addPost(username, data, files) != null) {
 				result = "Add post success";
 				httpStatus = HttpStatus.OK;
 			} else {
@@ -104,4 +111,65 @@ public class PostsController {
 
 		return new ResponseEntity<String>(result, httpStatus);
 	}
+	
+	// Update post
+	@RequestMapping(value = "/posts", method = RequestMethod.PUT, produces = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	@ResponseBody
+	public ResponseEntity<Posts> updatePost(@RequestHeader("Authorization") String authHeader,  @RequestBody Posts data) {
+		
+		//String aaString = JwtService.getUsernameFromToken(authHeader);
+		String username = jwtService.getUsernameFromToken(authHeader);
+		
+		HttpStatus httpStatus = null;
+		Posts posts = new Posts();
+		posts = postsService.updatePost(username, data);
+		// Add medical
+		try {
+				try {
+					if (posts != null) {
+						httpStatus = HttpStatus.OK;
+					}else {
+						httpStatus = HttpStatus.BAD_REQUEST;
+					}
+					
+				} catch (Exception e) {
+					// TODO: handle exception
+					httpStatus = HttpStatus.BAD_REQUEST;
+					System.out.println("Post controller" + e);
+				}
+				
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Post controller" + e);
+			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Posts>(posts, httpStatus);
+	}
+	
+	// Delete post
+		@RequestMapping(value = "/posts/{id_post}", method = RequestMethod.DELETE, produces = {
+				MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+		@ResponseBody
+		public ResponseEntity<String> deletePost(@RequestHeader("Authorization") String authHeader,
+				@PathVariable("id_post") Integer id_post) {
+			HttpStatus httpStatus = null;
+			String result = "";
+			String username = jwtService.getUsernameFromToken(authHeader);
+			try {
+				if (postsService.deletePost(username, id_post)) {
+					result = "Delete post success";
+					httpStatus = HttpStatus.OK;
+				} else {
+					httpStatus = HttpStatus.BAD_REQUEST;
+					result = "Delete post fail";
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+
+			return new ResponseEntity<String>(result, httpStatus);
+		}
 }

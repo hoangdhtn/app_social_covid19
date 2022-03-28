@@ -26,15 +26,15 @@ public class MedicalInfoService {
 		return medicalInfoDAO.getDetailMedicalInfo(id_medicalinfo);
 	}
 	
-	public MedicalInfo addMedicalInfo(Integer id_user, MedicalInfo data, MultipartFile[] files) {
-		return medicalInfoDAO.addMedicalInfo(id_user, data, files);
+	public MedicalInfo addMedicalInfo(String username, MedicalInfo data, MultipartFile[] files) {
+		return medicalInfoDAO.addMedicalInfo(username, data, files);
 	}
 	
-	public MedicalInfo updateMedicalInfo(Integer id_user, MedicalInfo data) {
-		return medicalInfoDAO.updateMedicalInfo(id_user, data);
+	public MedicalInfo updateMedicalInfo(String username, MedicalInfo data) {
+		return medicalInfoDAO.updateMedicalInfo(username, data);
 	}
 	
-	public Boolean deleteMedicalInfo(Integer id_user, Integer id_medical) {
-		return medicalInfoDAO.deleteMedicalInfo(id_user, id_medical);
+	public Boolean deleteMedicalInfo(String username, Integer id_medical) {
+		return medicalInfoDAO.deleteMedicalInfo(username, id_medical);
 	}
 }
