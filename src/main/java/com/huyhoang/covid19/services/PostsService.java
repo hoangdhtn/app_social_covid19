@@ -49,4 +49,8 @@ public class PostsService {
 	public Boolean addCommentPost(String username, Integer id_post, Posts_Cmt data) {
 		return postsDAO.addCommentPost(username, id_post, data);
 	}
+	
+	public Boolean deleteCommentPost(String username, Integer id_cmt) {
+		return postsDAO.deleteCommentPost(username, id_cmt);
+	}
 }

@@ -214,37 +214,37 @@ public class PostsDAO {
 		}
 
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<Posts_Cmt> getCommentPost(Integer id_post){
+	public List<Posts_Cmt> getCommentPost(Integer id_post) {
 		Session session = sessionFactory.getCurrentSession();
-		
+
 		try {
 			String hql = "from Posts_Cmt where id_post = :id_post order by id desc";
 			Query query = session.createQuery(hql, Posts_Cmt.class);
 			query.setParameter("id_post", id_post);
-			
+
 			List<Posts_Cmt> list = query.list();
 			if (list != null & list.size() > 0) {
 				return list;
-			}else {
+			} else {
 				return null;
 			}
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			return null;
 		}
 	}
-	
+
 	public Boolean addCommentPost(String username, Integer id_post, Posts_Cmt data) {
 		Session session = sessionFactory.getCurrentSession();
-		
+
 		Date date = new Date();
 		Users user = authDAO.loadUsername(username);
 		Posts post = session.get(Posts.class, id_post);
-		
-		if (post != null ) {
+
+		if (post != null) {
 			try {
 				Posts_Cmt pCmt = new Posts_Cmt();
 				pCmt.setContent(data.getContent());
@@ -258,7 +258,34 @@ public class PostsDAO {
 				// TODO: handle exception
 				return false;
 			}
-		}else {
+		} else {
+			return false;
+		}
+	}
+
+	public Boolean deleteCommentPost(String username, Integer id_cmt) {
+		Session session = sessionFactory.getCurrentSession();
+		Users user = authDAO.loadUsername(username);
+
+		try {
+			Posts_Cmt posts_Cmt = session.get(Posts_Cmt.class, id_cmt);
+			if (posts_Cmt.getUser().getId() == user.getId()
+					|| AuthorityUtils
+							.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities())
+							.contains("ROLE_ADMIN")
+					|| AuthorityUtils
+							.authorityListToSet(SecurityContextHolder.getContext().getAuthentication().getAuthorities())
+							.contains("ROLE_MODERATOR")) {
+				session.clear();
+				
+				session.createQuery("delete from Posts_Cmt where id = :id_cmt")
+				.setParameter("id_cmt", id_cmt).executeUpdate();
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 			return false;
 		}
 	}

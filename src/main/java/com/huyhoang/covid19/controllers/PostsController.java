@@ -221,4 +221,29 @@ public class PostsController {
 
 			return new ResponseEntity<String>(result, httpStatus);
 		}
+		
+	// Delete comment post
+		@RequestMapping(value = "/comment/{id_cmt}", method = RequestMethod.DELETE, produces = {
+				MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+		@ResponseBody
+		public ResponseEntity<String> deleteCommentPost(@RequestHeader("Authorization") String authHeader,
+				@PathVariable("id_cmt") Integer id_cmt) {
+			HttpStatus httpStatus = null;
+			String result = "";
+			String username = jwtService.getUsernameFromToken(authHeader);
+			try {
+				if (postsService.deleteCommentPost(username, id_cmt)) {
+					result = "Delete comment success";
+					httpStatus = HttpStatus.OK;
+				} else {
+					httpStatus = HttpStatus.BAD_REQUEST;
+					result = "Delete comment fail";
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+
+			return new ResponseEntity<String>(result, httpStatus);
+		}
 }
