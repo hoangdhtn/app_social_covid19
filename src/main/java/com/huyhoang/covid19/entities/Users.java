@@ -84,6 +84,10 @@ public class Users implements java.io.Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<Posts_Cmt> posts_Cmts = new HashSet<>();
 	
+	//News
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<News> news = new HashSet<>();
+	
 	public Users() {
 
 	}
@@ -226,6 +230,10 @@ public class Users implements java.io.Serializable {
 
 	public void setPosts_Cmts(Set<Posts_Cmt> posts_Cmts) {
 		this.posts_Cmts = posts_Cmts;
+	}
+
+	public void setNews(Set<News> news) {
+		this.news = news;
 	}
 
 	

@@ -67,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_AUTHOR') or hasRole('ROLE_MODERATOR')")
 				.antMatchers(HttpMethod.POST, "/api/users").access("hasRole('ROLE_ADMIN')")
 				.antMatchers(HttpMethod.DELETE, "/api/users/**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.PUT, "/api/users/**").access("hasRole('ROLE_USER')")
 				// Follow
 				.antMatchers(HttpMethod.POST, "/api/follow/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.DELETE, "/api/follow/**").access("hasRole('ROLE_USER')")
@@ -89,6 +90,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/api/comment**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.DELETE, "/api/comment**")
 				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
+				// News
+				.antMatchers(HttpMethod.GET, "/api/news**").access("hasRole('ROLE_USER')")
+				.antMatchers(HttpMethod.POST, "/api/news**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.PUT, "/api/news**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.DELETE, "/api/news**").access("hasRole('ROLE_ADMIN')")
+				//Category
+				.antMatchers(HttpMethod.GET, "/api/category**").access("hasRole('ROLE_USER')")
+				.antMatchers(HttpMethod.POST, "/api/category**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.DELETE, "/api/category**").access("hasRole('ROLE_ADMIN')")
 				.and()
 				.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
