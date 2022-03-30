@@ -50,7 +50,7 @@ public class News {
 	private Users user;
 	
 	// n - n: Category
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "news_category",
 		joinColumns = {@JoinColumn(name = "id_news")},
 		inverseJoinColumns = {@JoinColumn(name = "id_category")})
@@ -133,6 +133,10 @@ public class News {
 		this.categories = categories;
 	}
 
+	public Set<Category> getCategories() {
+		return categories;
+	}
 
+	
 	
 }

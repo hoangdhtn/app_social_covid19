@@ -38,7 +38,7 @@ public class Category {
 	private Date updated_at;
 
 	// n - n: News
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "news_category", joinColumns = { @JoinColumn(name = "id_category") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_news") })
 	private Set<News> news = new HashSet<>();

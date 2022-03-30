@@ -73,19 +73,24 @@ public class CategoryDAO {
 		
 		
 		try {
-			Session session = sessionFactory.openSession();
+			Session session = sessionFactory.getCurrentSession();
 			String q = "from News_Category where id_category = :id_cate";
 			Query query = session.createQuery(q, News_Category.class);
 			query.setParameter("id_cate", id_cate);
 			
 			List<News_Category> list = query.list();
+			
+			
 			for(News_Category n : list) {
-				session.delete(n);;
+				Session session3 = sessionFactory.getCurrentSession();
+				int a = n.getId();
+				session3.clear();
+				session3.createQuery("delete from News_Category where id_category = :id_cate")
+				.setParameter("id_cate", a).executeUpdate();
 			}
-			session.close();
 			
 			Session session2 = sessionFactory.getCurrentSession();
-			Category category = session2.get(Category.class, id_cate);
+			Category category = (Category)session2.get(Category.class, id_cate);
 			session2.delete(category);
 			return true;
 			
