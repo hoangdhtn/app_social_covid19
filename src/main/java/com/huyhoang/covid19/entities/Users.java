@@ -20,9 +20,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "users")
@@ -46,6 +48,12 @@ public class Users implements java.io.Serializable {
 	@Column(name = "full_name")
 	private String full_name;
 
+	@Column(name = "height")
+	private Integer height;
+
+	@Column(name = "weight")
+	private Integer weight;
+
 	@Column(name = "avatar_url")
 	private String avatar_url;
 
@@ -58,43 +66,40 @@ public class Users implements java.io.Serializable {
 	@Column(name = "location")
 	private String location;
 
+	@JsonFormat(pattern = "yy/MM/dd")
 	@Column(name = "data_of_birth")
-	private Date data_of_birth;
+	private String data_of_birth;
 
 	@Column(name = "created_at")
 	private Date created_at;
 
 	@Column(name = "updated_at")
 	private Date updated_at;
-	
-	//Role
+
+	// Role
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	@JoinTable(name = "users_roles",
-	joinColumns = {@JoinColumn(name = "user")},
-	inverseJoinColumns = {@JoinColumn(name ="role")})
+	@JoinTable(name = "users_roles", joinColumns = { @JoinColumn(name = "user") }, inverseJoinColumns = {
+			@JoinColumn(name = "role") })
 	private Set<Role> roles = new HashSet<>();
-	
-	
-	//Post
+
+	// Post
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<Posts> posts = new HashSet<>();
-	
-	
-	//Comment post
+
+	// Comment post
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<Posts_Cmt> posts_Cmts = new HashSet<>();
-	
-	//News
+
+	// News
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<News> news = new HashSet<>();
-	
+
 	public Users() {
 
 	}
 
-	public Users(String username, String password, String email, String full_name,
-			String avatar_url, Boolean is_active, String work_at, String location, Date date, Date created_at,
-			Date updated_at) {
+	public Users(String username, String password, String email, String full_name, String avatar_url, Boolean is_active,
+			String work_at, String location, String date, Date created_at, Date updated_at) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
@@ -108,8 +113,6 @@ public class Users implements java.io.Serializable {
 		this.updated_at = updated_at;
 	}
 
-
-
 	@Transient
 	public List<GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -119,7 +122,6 @@ public class Users implements java.io.Serializable {
 		return authorities;
 	}
 
-	
 	public Integer getId() {
 		return id;
 	}
@@ -160,6 +162,22 @@ public class Users implements java.io.Serializable {
 		this.full_name = full_name;
 	}
 
+	public Integer getHeight() {
+		return height;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
+	public Integer getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Integer weight) {
+		this.weight = weight;
+	}
+
 	public String getAvatar_url() {
 		return avatar_url;
 	}
@@ -192,11 +210,11 @@ public class Users implements java.io.Serializable {
 		this.location = location;
 	}
 
-	public Date getData_of_birth() {
+	public String getData_of_birth() {
 		return data_of_birth;
 	}
 
-	public void setData_of_birth(Date data_of_birth) {
+	public void setData_of_birth(String data_of_birth) {
 		this.data_of_birth = data_of_birth;
 	}
 
@@ -235,7 +253,5 @@ public class Users implements java.io.Serializable {
 	public void setNews(Set<News> news) {
 		this.news = news;
 	}
-
-	
 
 }

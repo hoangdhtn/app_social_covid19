@@ -8,6 +8,7 @@ import com.huyhoang.covid19.entities.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -24,8 +25,8 @@ public class UsersService {
 		return usersDAO.addUser(data);
 	}
 	
-	public Users updateUsers(Users data) {
-		return usersDAO.updateUser(data);
+	public Users updateUsers(String username, Users data, MultipartFile[] files) {
+		return usersDAO.updateUser(username, data, files);
 	}
 	
 	public boolean deleteUser(Integer id) {
