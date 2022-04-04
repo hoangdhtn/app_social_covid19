@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.huyhoang.covid19.entities.Posts;
+import com.huyhoang.covid19.entities.ResetPassword;
 import com.huyhoang.covid19.entities.Users;
 import com.huyhoang.covid19.services.AuthService;
 import com.huyhoang.covid19.services.JwtService;
@@ -87,7 +87,7 @@ public class UserController {
 			System.out.println("Post controller" + e);
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		
+
 		return new ResponseEntity<Users>(user, httpStatus);
 	}
 
@@ -210,6 +210,29 @@ public class UserController {
 			}
 		} catch (Exception ex) {
 			// System.out.print(ex);
+			result = "Server Error";
+			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<String>(result, httpStatus);
+	}
+
+	// Reset password
+	@RequestMapping(value = "/resetpassword", method = RequestMethod.POST, produces = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<String> resetPassword(@RequestBody ResetPassword formData) {
+		String result = "";
+		HttpStatus httpStatus = null;
+
+		try {
+			if (authService.resetPassword(formData)) {
+				result = "Change password success";
+				httpStatus = HttpStatus.OK;
+			} else {
+				result = "Change password fail";
+				httpStatus = HttpStatus.BAD_REQUEST;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 			result = "Server Error";
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}

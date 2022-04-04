@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.huyhoang.covid19.dao.AuthDAO;
+import com.huyhoang.covid19.entities.ResetPassword;
 import com.huyhoang.covid19.entities.Users;
 
 @Service
@@ -25,5 +26,9 @@ public class AuthService {
 	
 	public Users signupUser(Users data) {
 		return authDAO.signupUser(data);
+	}
+	
+	public Boolean resetPassword(ResetPassword rPassword) {
+		return authDAO.resetPassword(rPassword);
 	}
 }

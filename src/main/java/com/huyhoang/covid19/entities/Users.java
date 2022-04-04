@@ -20,7 +20,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -69,6 +68,9 @@ public class Users implements java.io.Serializable {
 	@JsonFormat(pattern = "yy/MM/dd")
 	@Column(name = "data_of_birth")
 	private String data_of_birth;
+	
+	@Column(name = "forget_pass_key")
+	private String forget_pass_key;
 
 	@Column(name = "created_at")
 	private Date created_at;
@@ -216,6 +218,14 @@ public class Users implements java.io.Serializable {
 
 	public void setData_of_birth(String data_of_birth) {
 		this.data_of_birth = data_of_birth;
+	}
+
+	public String getForget_pass_key() {
+		return forget_pass_key;
+	}
+
+	public void setForget_pass_key(String forget_pass_key) {
+		this.forget_pass_key = forget_pass_key;
 	}
 
 	public Date getCreated_at() {

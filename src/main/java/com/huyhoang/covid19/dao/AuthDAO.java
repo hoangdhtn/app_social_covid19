@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.huyhoang.covid19.entities.ResetPassword;
 import com.huyhoang.covid19.entities.Role;
 import com.huyhoang.covid19.entities.Users;
 
@@ -19,7 +20,7 @@ public class AuthDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -39,13 +40,13 @@ public class AuthDAO {
 		}
 	}
 
-	public boolean checkLogin(Users userForm) {	
+	public boolean checkLogin(Users userForm) {
 		Users u = loadUsername(userForm.getUsername());
-		
-		//System.out.println(passwordEncoder.matches(userForm.getPassword(), u.getPassword()));
 
-		if(u != null)
-		{
+		// System.out.println(passwordEncoder.matches(userForm.getPassword(),
+		// u.getPassword()));
+
+		if (u != null) {
 			if (passwordEncoder.matches(userForm.getPassword(), u.getPassword())) {
 				return true;
 			} else {
@@ -97,6 +98,40 @@ public class AuthDAO {
 			}
 		}
 		return null;
+
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Boolean resetPassword(ResetPassword rPassword) {
+		Session session = sessionFactory.getCurrentSession();
+		String q = "from Users where email = :email and forget_pass_key = :forget_pass_key";
+		Query query = session.createQuery(q, Users.class);
+		query.setParameter("email", rPassword.getEmail());
+		query.setParameter("forget_pass_key", rPassword.getKey());
+
+		Users users = new Users();
+
+		List<Users> list = query.list();
+
+		try {
+			if (list != null && list.size() > 0) {
+				users = list.get(0);
+
+				Session session2 = sessionFactory.getCurrentSession();
+				Users users2 = session2.get(Users.class, users.getId());
+				users2.setForget_pass_key(null);
+				users2.setPassword(passwordEncoder.encode(rPassword.getPasswordNew()));
+				;
+				session2.update(users2);
+				;
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
 
 	}
 }
