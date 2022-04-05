@@ -2,17 +2,20 @@ package com.huyhoang.covid19.entities;
 
 import java.util.Set;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class AddNewsData {
 	private News news;
-	private Set<Category> category;
+	private MultipartFile[] files;
+	private Set<Category> categories;
 
 	public AddNewsData() {
 
 	}
 
-	public AddNewsData(News news, Set<Category> category) {
+	public AddNewsData(News news, Set<Category> categories) {
 		this.news = news;
-		this.category = category;
+		this.categories = categories;
 	}
 
 	public News getNews() {
@@ -23,12 +26,22 @@ public class AddNewsData {
 		this.news = news;
 	}
 
-	public Set<Category> getCategory() {
-		return category;
+	public Set<Category> getCategories() {
+		return categories;
 	}
 
-	public void setCategory(Set<Category> category) {
-		this.category = category;
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
 	}
 
+	public MultipartFile[] getFiles() {
+		return files;
+	}
+
+	public void setFiles(MultipartFile[] files) {
+		this.files = files;
+	}
+
+
+	
 }

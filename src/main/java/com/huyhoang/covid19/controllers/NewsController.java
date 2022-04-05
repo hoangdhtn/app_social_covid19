@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.huyhoang.covid19.entities.AddNewsData;
 import com.huyhoang.covid19.entities.Category;
@@ -58,17 +61,19 @@ public class NewsController {
 	// Add news
 	@SuppressWarnings("unused")
 	@RequestMapping(value = "/news", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
-			MediaType.APPLICATION_XML_VALUE })
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.MULTIPART_FORM_DATA_VALUE }, consumes = { "multipart/form-data" })
 	@ResponseBody
 	public ResponseEntity<News> addNews(@RequestHeader("Authorization") String authHeader,
-			@RequestBody AddNewsData data) {
+			@RequestPart("data")  AddNewsData data, @RequestParam MultipartFile[] files) {
 		String username = jwtService.getUsernameFromToken(authHeader);
 		HttpStatus httpStatus = null;
 		News news = new News();
-		Set<Category> cate = (Set<Category>) data.getCategory();
+		Set<Category> cate = (Set<Category>) data.getCategories();
+		System.out.println("NEWS CC" + data.getNews());
 		try {
 			if (data != null) {
-				news = newsService.addNews(username, data.getNews(), cate);
+				news = newsService.addNews(username, data.getNews(), cate, files);
 				httpStatus = HttpStatus.OK;
 			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;
@@ -93,10 +98,10 @@ public class NewsController {
 		String username = jwtService.getUsernameFromToken(authHeader);
 		HttpStatus httpStatus = null;
 		News news = new News();
-		Set<Category> cate = (Set<Category>) data.getCategory();
+		Set<Category> cate = (Set<Category>) data.getCategories();
 		try {
 			if (data != null) {
-				news = newsService.updateNews(username, data.getNews(), cate);
+				news = newsService.updateNews(username, data);
 				httpStatus = HttpStatus.OK;
 			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;
@@ -112,8 +117,8 @@ public class NewsController {
 	}
 
 	// Delete news
-	@RequestMapping(value = "/news/{id_news}", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE,
-			MediaType.APPLICATION_XML_VALUE })
+	@RequestMapping(value = "/news/{id_news}", method = RequestMethod.DELETE, produces = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
 	public ResponseEntity<String> deleteNews(@PathVariable(name = "id_news") Integer id_news) {
 		HttpStatus httpStatus = null;

@@ -1,7 +1,6 @@
 package com.huyhoang.covid19.controllers;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

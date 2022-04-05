@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -50,11 +51,15 @@ public class News {
 	private Users user;
 	
 	// n - n: Category
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "news_category",
 		joinColumns = {@JoinColumn(name = "id_news")},
 		inverseJoinColumns = {@JoinColumn(name = "id_category")})
 	private Set<Category> categories = new HashSet<>();
+	
+	// 1 - n: News img
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "news", cascade = CascadeType.ALL)
+	private Set<News_Img> news_Imgs = new HashSet<>();
 	
 	public News() {
 		
@@ -137,6 +142,13 @@ public class News {
 		return categories;
 	}
 
-	
+	public Set<News_Img> getNews_Imgs() {
+		return news_Imgs;
+	}
+
+	public void setNews_Imgs(Set<News_Img> news_Imgs) {
+		this.news_Imgs = news_Imgs;
+	}
+
 	
 }
