@@ -121,9 +121,9 @@ public class AuthDAO {
 				Users users2 = session2.get(Users.class, users.getId());
 				users2.setForget_pass_key(null);
 				users2.setPassword(passwordEncoder.encode(rPassword.getPasswordNew()));
-				;
+
 				session2.update(users2);
-				;
+
 				return true;
 			} else {
 				return false;

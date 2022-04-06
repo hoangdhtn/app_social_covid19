@@ -58,6 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/api/getimage**").permitAll();
 		http.authorizeRequests().antMatchers("/api/sentmail**").permitAll();
 		http.authorizeRequests().antMatchers("/api/resetpassword**").permitAll();
+		http.authorizeRequests().antMatchers("/api/user**").permitAll();
+		
 		// or hasRole('ROLE_USER') or hasRole('ROLE_AUTHOR') or
 		// hasRole('ROLE_MODERATOR')
 		http.antMatcher("/api/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()

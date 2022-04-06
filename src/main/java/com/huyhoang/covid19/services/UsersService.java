@@ -45,7 +45,9 @@ public class UsersService {
 		return usersDAO.userUnFollow(users, id_follow);
 	}
 	
-	
+	public Users getUserByToken(String username) {
+		return usersDAO.getUserByToken(username);
+	}
 	
 }
 

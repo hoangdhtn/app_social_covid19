@@ -53,7 +53,29 @@ public class UserController {
 	public Users getUsers(@PathVariable("id") Integer id) {
 		return usersService.getUsers(id);
 	}
-
+	
+	// Get user by token
+	@RequestMapping(value = "/user", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE})
+	@ResponseBody
+	public ResponseEntity<Users> getUserByToken(@RequestHeader("Authorization") String authHeader){
+		String username = jwtService.getUsernameFromToken(authHeader);
+		HttpStatus httpStatus = null;
+		Users user = new Users();
+		try {
+			if(username != null) {
+				user = usersService.getUserByToken(username);
+				httpStatus = HttpStatus.OK;
+			}else {
+				httpStatus = HttpStatus.BAD_REQUEST;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			httpStatus = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<Users>(user, httpStatus);
+	}
+	
 	// Update user
 	@RequestMapping(value = "/users", method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE,

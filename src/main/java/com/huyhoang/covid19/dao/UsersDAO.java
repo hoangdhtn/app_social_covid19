@@ -33,6 +33,16 @@ public class UsersDAO {
 		Users users = (Users) session.get(Users.class, id);
 		return users;
 	}
+	
+	public Users getUserByToken(String username) {
+		try {
+			Users user = authDAO.loadUsername(username);
+			return user;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+	}
 
 	public Users addUser(Users data) {
 		Session session = sessionFactory.getCurrentSession();
