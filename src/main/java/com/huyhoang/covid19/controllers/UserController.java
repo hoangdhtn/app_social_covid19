@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.huyhoang.covid19.entities.ResetPassword;
+import com.huyhoang.covid19.entities.UserAndToken;
 import com.huyhoang.covid19.entities.Users;
 import com.huyhoang.covid19.services.AuthService;
 import com.huyhoang.covid19.services.JwtService;
@@ -192,16 +193,22 @@ public class UserController {
 
 	// Login
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
+	public ResponseEntity<UserAndToken> login(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";
 		HttpStatus httpStatus = null;
+		UserAndToken userAndToken = new UserAndToken();
 		// System.out.print(user.getUsername() + user.getPassword());
 		try {
 			if (authService.checkLogin(user)) {
 				result = jwtService.generateTokenLogin(user.getUsername());
+				Users userData = usersService.getUserByToken(user.getUsername());
+				userAndToken.setUser(userData);
+				userAndToken.setToken(result);
+				
 				httpStatus = HttpStatus.OK;
 			} else {
-				result = "Wrong userId and password";
+				userAndToken.setUser(null);
+				userAndToken.setToken("");
 				httpStatus = HttpStatus.BAD_REQUEST;
 			}
 		} catch (Exception ex) {
@@ -209,25 +216,27 @@ public class UserController {
 			result = "Server Error";
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		return new ResponseEntity<String>(result, httpStatus);
+		return new ResponseEntity<UserAndToken>(userAndToken, httpStatus);
 	}
 
 	// Signup
 	@RequestMapping(value = "/signup", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
-	public ResponseEntity<String> signup(HttpServletRequest request, @RequestBody Users user) {
+	public ResponseEntity<Users> signup(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";
 		HttpStatus httpStatus = null;
+		Users userRes = new Users();
 
 		System.out.print(user.getUsername());
 		// System.out.print(user.getUsername() + user.getPassword());
 		try {
 			if (authService.signupUser(user) != null) {
-				authService.signupUser(user);
+				userRes = authService.loadUserByUsername(user.getUsername());
 				httpStatus = HttpStatus.OK;
 				result = "Sign up success";
 			} else {
 				result = "Sign up fail";
+				userRes = null;
 				httpStatus = HttpStatus.BAD_REQUEST;
 			}
 		} catch (Exception ex) {
@@ -235,7 +244,7 @@ public class UserController {
 			result = "Server Error";
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		return new ResponseEntity<String>(result, httpStatus);
+		return new ResponseEntity<Users>(userRes, httpStatus);
 	}
 
 	// Reset password

@@ -25,7 +25,7 @@ public class AuthDAO {
 	private PasswordEncoder passwordEncoder;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Users loadUsername(final String username) {
+	public Users loadUsername(String username) {
 		Session session = this.sessionFactory.getCurrentSession();
 		String hql = "from Users where username = :username";
 		Query query = session.createQuery(hql, Users.class);
@@ -88,6 +88,7 @@ public class AuthDAO {
 					user.setRoles(roles);
 					session2.save(user);
 					session2.getTransaction().commit();
+					
 					return user;
 
 				} catch (Exception e) {

@@ -16,7 +16,7 @@ public class AuthService {
 	@Autowired
 	private AuthDAO authDAO;
 	
-	public Users loadUserByUsername(final String username) {
+	public Users loadUserByUsername(String username) {
 		return authDAO.loadUsername(username);
 	}
 	
