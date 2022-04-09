@@ -1,5 +1,6 @@
 package com.huyhoang.covid19.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.huyhoang.covid19.entities.Email;
 import com.huyhoang.covid19.entities.Users;
 
 @RestController
@@ -37,9 +39,10 @@ public class MailController {
 			MediaType.MULTIPART_FORM_DATA_VALUE }, consumes = { "multipart/form-data" })
 
 	@ResponseBody
-	public ResponseEntity<String> sentMail(@RequestParam String email) {
+	public ResponseEntity<Email> sentMail(@RequestParam String email) {
 		HttpStatus httpStatus = null;
 		String result = "";
+		Email emailResult = new Email();
 		try {
 			Users users = new Users();
 			int max = 9999;
@@ -75,9 +78,11 @@ public class MailController {
 				
 				httpStatus = HttpStatus.OK;
 				result = "Sent mail success";
+				emailResult.setStatus("success");
 			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;
 				result = "Sent mail fail";
+				emailResult.setStatus("fail");
 			}
 
 		} catch (Exception e) {
@@ -85,6 +90,6 @@ public class MailController {
 			System.out.print("Loi email" + e);
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		return new ResponseEntity<String>(result, httpStatus);
+		return new ResponseEntity<Email>(emailResult, httpStatus);
 	}
 }
