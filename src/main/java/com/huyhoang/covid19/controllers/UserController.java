@@ -250,16 +250,21 @@ public class UserController {
 	// Reset password
 	@RequestMapping(value = "/resetpassword", method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
-	public ResponseEntity<String> resetPassword(@RequestBody ResetPassword formData) {
+	public ResponseEntity<ResetPassword> resetPassword(@RequestBody ResetPassword formData) {
 		String result = "";
 		HttpStatus httpStatus = null;
-
+		
+		ResetPassword resetPassword = new ResetPassword();
 		try {
 			if (authService.resetPassword(formData)) {
 				result = "Change password success";
+				resetPassword.setEmail(formData.getEmail());
+				resetPassword.setStatus("success");
 				httpStatus = HttpStatus.OK;
 			} else {
 				result = "Change password fail";
+				resetPassword.setEmail(formData.getEmail());
+				resetPassword.setStatus("fail");
 				httpStatus = HttpStatus.BAD_REQUEST;
 			}
 		} catch (Exception e) {
@@ -267,6 +272,6 @@ public class UserController {
 			result = "Server Error";
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		return new ResponseEntity<String>(result, httpStatus);
+		return new ResponseEntity<ResetPassword>(resetPassword, httpStatus);
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,11 +36,9 @@ public class MailController {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/sentmail", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
-			MediaType.APPLICATION_XML_VALUE,
-			MediaType.MULTIPART_FORM_DATA_VALUE }, consumes = { "multipart/form-data" })
-
+			MediaType.APPLICATION_XML_VALUE})
 	@ResponseBody
-	public ResponseEntity<Email> sentMail(@RequestParam String email) {
+	public ResponseEntity<Email> sentMail(@RequestBody Email email) {
 		HttpStatus httpStatus = null;
 		String result = "";
 		Email emailResult = new Email();
@@ -52,7 +51,7 @@ public class MailController {
 			Session session = sessionFactory.getCurrentSession();
 			String q = "from Users where email = :email";
 			Query query = session.createQuery(q, Users.class);
-			query.setParameter("email", email);
+			query.setParameter("email", email.getEmail());
 
 			List<Users> list = query.list();
 

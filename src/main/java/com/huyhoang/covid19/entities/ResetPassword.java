@@ -5,6 +5,7 @@ public class ResetPassword {
 	String key;
 	String email;
 	String passwordNew;
+	String status;
 	
 	public ResetPassword() {
 		
@@ -38,6 +39,14 @@ public class ResetPassword {
 
 	public void setPasswordNew(String passwordNew) {
 		this.passwordNew = passwordNew;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	
