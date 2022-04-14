@@ -42,6 +42,7 @@ public class NewsDAO {
 			Query query = session.createQuery(q, News.class);
 			query.setFirstResult(position);
 			query.setMaxResults(pageSize);
+			System.out.println("AAAA" + query.list());
 			return query.list();
 		} catch (Exception e) {
 			// TODO: handle exception
