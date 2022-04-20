@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "medicalinfo")
 public class MedicalInfo implements java.io.Serializable{
@@ -37,11 +39,13 @@ public class MedicalInfo implements java.io.Serializable{
 	@Column(name = "enabled", columnDefinition = "TINYINT(1)")
 	private Boolean enabled;
 	
+	@JsonFormat(pattern = "yy/MM/dd")
 	@Column(name = "created_at")
-	private Date created_at;
+	private String created_at;
 
+	@JsonFormat(pattern = "yy/MM/dd")
 	@Column(name = "updated_at")
-	private Date updated_at;
+	private String updated_at;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "medicalinfo", cascade = CascadeType.ALL)
 	private Set<MedicalInfo_Img> listImg = new HashSet<>();
@@ -50,7 +54,7 @@ public class MedicalInfo implements java.io.Serializable{
 		
 	}
 
-	public MedicalInfo(Integer id_user, String name, String info, Boolean enabled, Date created_at, Date updated_at) {
+	public MedicalInfo(Integer id_user, String name, String info, Boolean enabled, String created_at, String updated_at) {
 		this.id_user = id_user;
 		this.name = name;
 		this.info = info;
@@ -99,19 +103,19 @@ public class MedicalInfo implements java.io.Serializable{
 		this.enabled = enabled;
 	}
 
-	public Date getCreated_at() {
+	public String getCreated_at() {
 		return created_at;
 	}
 
-	public void setCreated_at(Date created_at) {
+	public void setCreated_at(String created_at) {
 		this.created_at = created_at;
 	}
 
-	public Date getUpdated_at() {
+	public String getUpdated_at() {
 		return updated_at;
 	}
 
-	public void setUpdated_at(Date updated_at) {
+	public void setUpdated_at(String updated_at) {
 		this.updated_at = updated_at;
 	}
 

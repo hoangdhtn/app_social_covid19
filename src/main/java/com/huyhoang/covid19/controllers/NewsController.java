@@ -57,6 +57,30 @@ public class NewsController {
 		}
 		return new ResponseEntity<List<News>>(list, httpStatus);
 	}
+	
+	// Get all news by ID Cate
+		@RequestMapping(value = "/news/{id_cate}/{position}/{pagesize}", method = RequestMethod.GET, produces = {
+				MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+		@ResponseBody
+		public ResponseEntity<List<Object[]>> getAllNews(@PathVariable(name = "id_cate") Integer id_cate, @PathVariable(name = "position") Integer position,
+				@PathVariable(name = "pagesize") Integer pagesize) {
+
+			HttpStatus httpStatus = null;
+
+			List<Object[]> list = null;
+			try {
+				if (newsService.getNewsByCate(id_cate,position, pagesize) != null) {
+					list = newsService.getNewsByCate(id_cate,position, pagesize);
+					httpStatus = HttpStatus.OK;
+				} else {
+					httpStatus = HttpStatus.BAD_REQUEST;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+			return new ResponseEntity<List<Object[]>>(list, httpStatus);
+		}
 
 	// Add news
 	@SuppressWarnings("unused")

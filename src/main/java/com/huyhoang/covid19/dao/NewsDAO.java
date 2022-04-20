@@ -49,6 +49,22 @@ public class NewsDAO {
 			return null;
 		}
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<Object[]> getNewsByCate(int id_cate,int position, int pageSize ){
+		Session session = sessionFactory.getCurrentSession();
+		try {
+			String hql = "FROM News n LEFT JOIN n.categories c WHERE c.id=:id";
+			Query query = session.createQuery(hql).setParameter("id", id_cate);
+			query.setFirstResult(position);
+			query.setMaxResults(pageSize);
+			return query.list();
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("LOI : " + e.toString());
+			return null;
+		}
+	}
 
 	public News addNews(String username, News data, Set<Category> listCate, MultipartFile[] files) {
 		Session session = sessionFactory.getCurrentSession();

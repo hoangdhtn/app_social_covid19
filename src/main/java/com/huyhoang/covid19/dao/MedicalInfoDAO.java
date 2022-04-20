@@ -33,17 +33,25 @@ public class MedicalInfoDAO {
 	private AuthDAO authDAO;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<MedicalInfo> getMedicalInfos(Users user) {
-		Session session = sessionFactory.getCurrentSession();
-		String hql = "from MedicalInfo where id_user = :id";
-		Query query = session.createQuery(hql, MedicalInfo.class);
-		query.setParameter("id", user.getId());
+	public List<MedicalInfo> getMedicalInfos(String username) {
+		try {
+			Users user = authDAO.loadUsername(username);
+			System.out.print("Loi Ne " + user.getId().toString());
+			Session session = sessionFactory.getCurrentSession();
+			String hql = "from MedicalInfo where id_user = :id order by id desc";
+			Query query = session.createQuery(hql, MedicalInfo.class);
+			query.setParameter("id", user.getId());
 
-		List<MedicalInfo> listMedical = query.list();
+			List<MedicalInfo> listMedical = query.list();
 
-		if (listMedical != null && listMedical.size() > 0) {
-			return listMedical;
-		} else {
+			if (listMedical != null && listMedical.size() > 0) {
+				return listMedical;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.print("Loi Ne " + e.toString());
 			return null;
 		}
 
@@ -119,8 +127,8 @@ public class MedicalInfoDAO {
 			medicalInfo.setName(data.getName());
 			medicalInfo.setInfo(data.getInfo());
 			medicalInfo.setEnabled(true);
-			medicalInfo.setCreated_at(date);
-			medicalInfo.setUpdated_at(date);
+			medicalInfo.setCreated_at(data.getCreated_at());
+			medicalInfo.setUpdated_at(data.getUpdated_at());
 			medicalInfo.setListImg(medicalInfo_Imgs);
 			session.save(medicalInfo);
 		} catch (Exception e) {
@@ -142,8 +150,8 @@ public class MedicalInfoDAO {
 			medicalInfo.setName(data.getName());
 			medicalInfo.setInfo(data.getInfo());
 			medicalInfo.setEnabled(true);
-			medicalInfo.setCreated_at(date);
-			medicalInfo.setUpdated_at(date);
+			medicalInfo.setCreated_at(data.getCreated_at());
+			medicalInfo.setUpdated_at(data.getUpdated_at());
 			session.save(medicalInfo);
 
 			return medicalInfo;		

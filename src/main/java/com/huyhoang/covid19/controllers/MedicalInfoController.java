@@ -36,11 +36,11 @@ public class MedicalInfoController {
 	@RequestMapping(value = "/medical", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<List<MedicalInfo>> getAllMedical(@RequestBody Users user) {
-
+	public ResponseEntity<List<MedicalInfo>> getAllMedical(@RequestHeader("Authorization") String authHeader) {
+		String username = jwtService.getUsernameFromToken(authHeader);
 		HttpStatus httpStatus = null;
 
-		List<MedicalInfo> list = medicalInfoService.getMedicalInfos(user);
+		List<MedicalInfo> list = medicalInfoService.getMedicalInfos(username);
 		try {
 			if (list != null) {
 				httpStatus = HttpStatus.OK;
@@ -50,6 +50,7 @@ public class MedicalInfoController {
 		} catch (Exception e) {
 			// TODO: handle exception
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+			System.out.print("Loi Ne " + e.toString());
 		}
 		return new ResponseEntity<List<MedicalInfo>>(list, httpStatus);
 	}

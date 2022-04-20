@@ -35,4 +35,8 @@ public class NewsService {
 	public Boolean deleteNews(Integer id_news) {
 		return newsDAO.deleteNews(id_news);
 	}
+	
+	public List<Object[]> getNewsByCate(int id_cate,int position, int pageSize ){
+		return newsDAO.getNewsByCate(id_cate, position, pageSize);
+	}
 }
