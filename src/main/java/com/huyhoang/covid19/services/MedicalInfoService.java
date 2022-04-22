@@ -18,12 +18,12 @@ public class MedicalInfoService {
 	@Autowired
 	private MedicalInfoDAO medicalInfoDAO;
 	
-	public List<MedicalInfo> getMedicalInfos(String username){
-		return medicalInfoDAO.getMedicalInfos(username);
+	public List<MedicalInfo> getMedicalInfos(String username, int position, int pageSize){
+		return medicalInfoDAO.getMedicalInfos(username,  position,  pageSize);
 	}
 	
-	public MedicalInfo getDetailMedicalInfo(Integer id_medicalinfo) {
-		return medicalInfoDAO.getDetailMedicalInfo(id_medicalinfo);
+	public MedicalInfo getDetailMedicalInfo(String username,Integer id_medicalinfo) {
+		return medicalInfoDAO.getDetailMedicalInfo(username,id_medicalinfo);
 	}
 	
 	public MedicalInfo addMedicalInfo(String username, MedicalInfo data, MultipartFile[] files) {

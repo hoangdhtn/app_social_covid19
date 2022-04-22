@@ -33,20 +33,24 @@ public class MedicalInfoDAO {
 	private AuthDAO authDAO;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<MedicalInfo> getMedicalInfos(String username) {
+	public List<MedicalInfo> getMedicalInfos(String username, int position, int pageSize) {
 		try {
 			Users user = authDAO.loadUsername(username);
-			System.out.print("Loi Ne " + user.getId().toString());
+			
 			Session session = sessionFactory.getCurrentSession();
 			String hql = "from MedicalInfo where id_user = :id order by id desc";
 			Query query = session.createQuery(hql, MedicalInfo.class);
 			query.setParameter("id", user.getId());
+			query.setFirstResult(position);
+			query.setMaxResults(pageSize);
 
 			List<MedicalInfo> listMedical = query.list();
 
 			if (listMedical != null && listMedical.size() > 0) {
+				System.out.print("Loi Ne " + listMedical.toString());
 				return listMedical;
 			} else {
+				System.out.print("Loi Ne " + listMedical.toString());
 				return null;
 			}
 		} catch (Exception e) {
@@ -57,16 +61,28 @@ public class MedicalInfoDAO {
 
 	}
 
-	public MedicalInfo getDetailMedicalInfo(Integer id_medicalinfo) {
+	@SuppressWarnings("unused")
+	public MedicalInfo getDetailMedicalInfo(String username, Integer id_medicalinfo) {
 		Session session = sessionFactory.getCurrentSession();
-
-		MedicalInfo medicalInfo = session.get(MedicalInfo.class, id_medicalinfo);
-
-		if (medicalInfo != null) {
-			return medicalInfo;
-		} else {
+		Users user = authDAO.loadUsername(username);
+		
+		try {
+			MedicalInfo medicalInfo = session.get(MedicalInfo.class, id_medicalinfo);
+			if(medicalInfo.getId_user() == user.getId()) {
+				if (medicalInfo != null) {
+					return medicalInfo;
+				} else {
+					return null;
+				}
+			}else {
+				return null;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
 			return null;
 		}
+
+		
 	}
 
 	public MedicalInfo addMedicalInfo(String username, MedicalInfo data, MultipartFile[] files) {

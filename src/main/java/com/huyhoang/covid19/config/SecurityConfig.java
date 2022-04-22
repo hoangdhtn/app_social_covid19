@@ -76,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.DELETE, "/api/follow/**").access("hasRole('ROLE_USER')")
 				// Medical
 				.antMatchers(HttpMethod.GET, "/api/medical**").access("hasRole('ROLE_USER')")
+				.antMatchers(HttpMethod.GET, "/api/medical/**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.POST, "/api/medical**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.PUT, "/api/medical**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.DELETE, "/api/medical**").access("hasRole('ROLE_USER')")

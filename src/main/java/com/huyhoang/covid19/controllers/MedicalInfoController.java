@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.huyhoang.covid19.dao.AuthDAO;
 import com.huyhoang.covid19.entities.MedicalInfo;
 import com.huyhoang.covid19.entities.Users;
 import com.huyhoang.covid19.services.JwtService;
@@ -31,16 +32,21 @@ public class MedicalInfoController {
 	
 	@Autowired 
 	private JwtService jwtService = new JwtService();
+	
+	@Autowired
+	private AuthDAO authDAO;
 
 	// List all medical
-	@RequestMapping(value = "/medical", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+	@RequestMapping(value = "/medical/{position}/{pagesize}", method = RequestMethod.GET, 
+			produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<List<MedicalInfo>> getAllMedical(@RequestHeader("Authorization") String authHeader) {
+	public ResponseEntity<List<MedicalInfo>> getAllMedical(@RequestHeader("Authorization") String authHeader, @PathVariable(name = "position") Integer position,
+			@PathVariable(name = "pagesize") Integer pagesize) {
 		String username = jwtService.getUsernameFromToken(authHeader);
 		HttpStatus httpStatus = null;
 
-		List<MedicalInfo> list = medicalInfoService.getMedicalInfos(username);
+		List<MedicalInfo> list = medicalInfoService.getMedicalInfos(username, position, pagesize);
 		try {
 			if (list != null) {
 				httpStatus = HttpStatus.OK;
@@ -56,17 +62,20 @@ public class MedicalInfoController {
 	}
 
 	// Get detail medical
-	@RequestMapping(value = "/medical/{id_user}/{id_medical}", method = RequestMethod.GET, produces = {
+	@RequestMapping(value = "/medical/{id_medical}", method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<MedicalInfo> addMedicalInfo(@PathVariable("id_user") Integer id_user,
+	public ResponseEntity<MedicalInfo> addMedicalInfo(@RequestHeader("Authorization") String authHeader,
 			@PathVariable("id_medical") Integer id_medical) {
+		String username = jwtService.getUsernameFromToken(authHeader);
+		
 		HttpStatus httpStatus = null;
-		MedicalInfo medicalInfo = medicalInfoService.getDetailMedicalInfo(id_medical);
+		MedicalInfo medicalInfo = medicalInfoService.getDetailMedicalInfo(username, id_medical);
+		
 		MedicalInfo result = new MedicalInfo();
 		try {
-			if (medicalInfo != null && medicalInfo.getId_user() == id_user) {
-				result = medicalInfoService.getDetailMedicalInfo(id_medical);
+			if (medicalInfo != null) {
+				result = medicalInfoService.getDetailMedicalInfo(username, id_medical);
 				// System.out.println(result);
 				httpStatus = HttpStatus.OK;
 			} else {
