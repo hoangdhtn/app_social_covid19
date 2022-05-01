@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.huyhoang.covid19.dao.AuthDAO;
 import com.huyhoang.covid19.entities.MedicalInfo;
+import com.huyhoang.covid19.entities.Notification;
 import com.huyhoang.covid19.entities.Users;
 import com.huyhoang.covid19.services.JwtService;
 import com.huyhoang.covid19.services.MedicalInfoService;
@@ -146,24 +147,24 @@ public class MedicalInfoController {
 	@RequestMapping(value = "/medical/{id_medical}", method = RequestMethod.DELETE, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<String> deleteMedicalInfo(@RequestHeader("Authorization") String authHeader,
+	public ResponseEntity<Notification> deleteMedicalInfo(@RequestHeader("Authorization") String authHeader,
 			@PathVariable("id_medical") Integer id_medical) {
 		HttpStatus httpStatus = null;
-		String result = "";
+		Notification result = new Notification();
 		String username = jwtService.getUsernameFromToken(authHeader);
 		try {
 			if (medicalInfoService.deleteMedicalInfo(username, id_medical)) {
-				result = "Delete medical success";
+				result.setStatus("success");
 				httpStatus = HttpStatus.OK;
 			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;
-				result = "Delete medical fail";
+				result.setStatus("fail");
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
-		return new ResponseEntity<String>(result, httpStatus);
+		return new ResponseEntity<Notification>(result, httpStatus);
 	}
 }
