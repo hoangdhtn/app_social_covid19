@@ -2,34 +2,17 @@ package com.huyhoang.covid19.services;
 
 import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.huyhoang.covid19.dao.CategoryDAO;
 import com.huyhoang.covid19.entities.Category;
 
-@Service
-@Transactional
-public class CategoryService {
 
-	@Autowired
-	private CategoryDAO categoryDAO;
+public interface CategoryService {
+
+	public List<Category> getAllCategory();
 	
-	public List<Category> getAllCategory(){
-		return categoryDAO.getAllCategory();
-	}
+	public Category addCategory(Category data);
 	
-	public Category addCategory(Category data) {
-		return categoryDAO.addCategory(data);
-	}
+	public Category updateCategory(Category data);
 	
-	public Category updateCategory(Category data) {
-		return categoryDAO.updateCategory(data);
-	}
-	
-	public Boolean deleteCategory(Integer id_cate) {
-		return categoryDAO.deleteCategory(id_cate);
-	}
+	public Boolean deleteCategory(Integer id_cate);
 }

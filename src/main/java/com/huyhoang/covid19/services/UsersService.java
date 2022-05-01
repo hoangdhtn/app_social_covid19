@@ -10,44 +10,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
-@Transactional
-public class UsersService {
 
-	@Autowired
-	private UsersDAO usersDAO;
+public interface UsersService {
+
+
+	public Users getUsers(Integer id);
 	
-	public Users getUsers(Integer id) {
-		return usersDAO.getUser(id);
-	}
+	public Users addUsers(Users data);
 	
-	public Users addUsers(Users data) {
-		return usersDAO.addUser(data);
-	}
+	public Users updateUsers(String username, Users data, MultipartFile[] files);
 	
-	public Users updateUsers(String username, Users data, MultipartFile[] files) {
-		return usersDAO.updateUser(username, data, files);
-	}
+	public boolean deleteUser(Integer id);
 	
-	public boolean deleteUser(Integer id) {
-		return usersDAO.deleteUser(id);
-	}
+	public List<Users> getAllUsers();
 	
-	public List<Users> getAllUsers(){
-		return usersDAO.getAllUsers();
-	}
+	public boolean userFollow(Users users, Integer id_follow);
 	
-	public boolean userFollow(Users users, Integer id_follow) {
-		return usersDAO.userFollow(users, id_follow);
-	}
+	public boolean userUnFollow(Users users, Integer id_follow);
 	
-	public boolean userUnFollow(Users users, Integer id_follow) {
-		return usersDAO.userUnFollow(users, id_follow);
-	}
-	
-	public Users getUserByToken(String username) {
-		return usersDAO.getUserByToken(username);
-	}
+	public Users getUserByToken(String username);
 	
 }
 
