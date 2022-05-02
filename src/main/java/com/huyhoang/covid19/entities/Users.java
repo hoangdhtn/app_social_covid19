@@ -19,7 +19,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Email;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -36,12 +40,16 @@ public class Users implements java.io.Serializable {
 	private Integer id;
 
 	@Column(name = "username")
+	@NotEmpty(message = "Thiếu username")
 	private String username;
 
 	@Column(name = "password")
+	@NotEmpty(message = "Thiếu password")
+	@Length(min = 8, message = "Password phải từ 8 kí tự trở lên")
 	private String password;
 
 	@Column(name = "email")
+	@Email(message = "Email không hợp lệ")
 	private String email;
 
 	@Column(name = "full_name")

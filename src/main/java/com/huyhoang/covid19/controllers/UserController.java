@@ -1,8 +1,11 @@
 package com.huyhoang.covid19.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import com.huyhoang.covid19.entities.ResetPassword;
 import com.huyhoang.covid19.entities.UserAndToken;
@@ -15,6 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -193,11 +201,10 @@ public class UserController {
 
 	// Login
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<UserAndToken> login(HttpServletRequest request, @RequestBody Users user) {
+	public ResponseEntity<UserAndToken> login(HttpServletRequest request, @Valid @RequestBody Users user) {
 		String result = "";
 		HttpStatus httpStatus = null;
 		UserAndToken userAndToken = new UserAndToken();
-		// System.out.print(user.getUsername() + user.getPassword());
 		try {
 			if (authService.checkLogin(user)) {
 				result = jwtService.generateTokenLogin(user.getUsername());
@@ -211,6 +218,8 @@ public class UserController {
 				userAndToken.setToken("");
 				httpStatus = HttpStatus.BAD_REQUEST;
 			}
+			
+		            
 		} catch (Exception ex) {
 			// System.out.print(ex);
 			result = "Server Error";
@@ -222,7 +231,7 @@ public class UserController {
 	// Signup
 	@RequestMapping(value = "/signup", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
-	public ResponseEntity<Users> signup(HttpServletRequest request, @RequestBody Users user) {
+	public ResponseEntity<Users> signup(HttpServletRequest request,@Valid @RequestBody Users user) {
 		String result = "";
 		HttpStatus httpStatus = null;
 		Users userRes = new Users();
@@ -274,4 +283,16 @@ public class UserController {
 		}
 		return new ResponseEntity<ResetPassword>(resetPassword, httpStatus);
 	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
 }
