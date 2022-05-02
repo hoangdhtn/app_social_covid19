@@ -284,6 +284,8 @@ public class UserController {
 		return new ResponseEntity<ResetPassword>(resetPassword, httpStatus);
 	}
 	
+	
+	// Trả về lỗi khi valid 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
