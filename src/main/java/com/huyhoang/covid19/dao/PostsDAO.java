@@ -35,11 +35,13 @@ public class PostsDAO {
 	private AuthDAO authDAO;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<Posts> getAllPosts() {
+	public List<Posts> getAllPosts(int position, int pageSize) {
 		Session session = sessionFactory.getCurrentSession();
 
 		String hql = "from Posts where enabled = 1 order by id desc";
 		Query query = session.createQuery(hql, Posts.class);
+		query.setFirstResult(position);
+		query.setMaxResults(pageSize);
 
 		List<Posts> list = query.list();
 
@@ -104,36 +106,38 @@ public class PostsDAO {
 			uploadRootDir.mkdirs();
 		}
 
-		MultipartFile[] fileDatas = files;
+		if(files != null && files.length > 0) {
+			MultipartFile[] fileDatas = files;
 
-		for (MultipartFile fileData : fileDatas) {
+			for (MultipartFile fileData : fileDatas) {
 
-			// Tên file gốc tại Client.
-			String name = fileData.getOriginalFilename();
-			System.out.println("Client File Name = " + name);
+				// Tên file gốc tại Client.
+				String name = fileData.getOriginalFilename();
+				System.out.println("Client File Name = " + name);
 
-			if (name != null && name.length() > 0) {
-				try {
-					// Tạo file tại Server.
-					String changeName = LocalTime.now().toString().replaceAll("[^A-Za-z0-9]", "");
-					String nameupString = changeName + name;
-					File serverFile = new File(
-							uploadRootDir.getAbsolutePath() + File.separator + nameupString.toLowerCase());
+				if (name != null && name.length() > 0) {
+					try {
+						// Tạo file tại Server.
+						String changeName = LocalTime.now().toString().replaceAll("[^A-Za-z0-9]", "");
+						String nameupString = changeName + name;
+						File serverFile = new File(
+								uploadRootDir.getAbsolutePath() + File.separator + nameupString.toLowerCase());
 
-					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-					stream.write(fileData.getBytes());
-					stream.close();
-					//
-					Posts_Img img = new Posts_Img();
-					img.setName(nameupString);
-					img.setPost(post);
-					img.setCreated_at(date);
-					img.setUpdated_at(date);
-					posts_Imgs.add(img);
+						BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+						stream.write(fileData.getBytes());
+						stream.close();
+						//
+						Posts_Img img = new Posts_Img();
+						img.setName(nameupString);
+						img.setPost(post);
+						img.setCreated_at(date);
+						img.setUpdated_at(date);
+						posts_Imgs.add(img);
 
-					System.out.println("Write file: " + serverFile);
-				} catch (Exception e) {
-					System.out.println("Error Write file: " + name);
+						System.out.println("Write file: " + serverFile);
+					} catch (Exception e) {
+						System.out.println("Error Write file: " + name);
+					}
 				}
 			}
 		}
@@ -145,7 +149,12 @@ public class PostsDAO {
 			post.setEnabled(true);
 			post.setCreated_at(date);
 			post.setUpdated_at(date);
-			post.setPosts_imgs(posts_Imgs);
+			
+			if(files != null && files.length > 0) {
+				post.setPosts_imgs(posts_Imgs);
+			}else {
+				post.setPosts_imgs(null);
+			}
 			session.save(post);
 			return post;
 		} catch (Exception e) {
@@ -168,7 +177,6 @@ public class PostsDAO {
 		if (post != null && user_post.getId() == user.getId()) {
 			post.setContent(postForm.getContent());
 			post.setEnabled(postForm.getEnabled());
-			post.setCreated_at(date);
 			post.setUpdated_at(date);
 			session.save(post);
 			return post;
@@ -220,7 +228,7 @@ public class PostsDAO {
 		Session session = sessionFactory.getCurrentSession();
 
 		try {
-			String hql = "from Posts_Cmt where id_post = :id_post order by id desc";
+			String hql = "from Posts_Cmt where id_post = :id_post order by id DESC";
 			Query query = session.createQuery(hql, Posts_Cmt.class);
 			query.setParameter("id_post", id_post);
 

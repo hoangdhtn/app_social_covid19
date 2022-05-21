@@ -2,6 +2,7 @@ package com.huyhoang.covid19.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +22,7 @@ public class Likes {
 	@Column(name = "id_user")
 	private Integer id_user;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_post", nullable = false)
 	private Posts post;
 	
@@ -50,9 +51,9 @@ public class Likes {
 		this.id_user = id_user;
 	}
 
-	public Posts getPost() {
-		return post;
-	}
+//	public Posts getPost() {
+//		return post;
+//	}
 
 	public void setPost(Posts post) {
 		this.post = post;

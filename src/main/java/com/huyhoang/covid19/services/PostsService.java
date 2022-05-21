@@ -11,7 +11,7 @@ import com.huyhoang.covid19.entities.Posts_Cmt;
 public interface PostsService {
 
 
-	public List<Posts> getAllPosts();
+	public List<Posts> getAllPosts(int position, int pageSize);
 	
 	public List<Posts> getAllPostsUser(Integer id_user);
 	

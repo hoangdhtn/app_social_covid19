@@ -104,35 +104,37 @@ public class MedicalInfoDAO {
 			uploadRootDir.mkdirs();
 		}
 
-		MultipartFile[] fileDatas = files;
+		if(files != null) {
+			MultipartFile[] fileDatas = files;
 
-		for (MultipartFile fileData : fileDatas) {
+			for (MultipartFile fileData : fileDatas) {
 
-			// Tên file gốc tại Client.
-			String name = fileData.getOriginalFilename();
-			System.out.println("Client File Name = " + name);
+				// Tên file gốc tại Client.
+				String name = fileData.getOriginalFilename();
+				System.out.println("Client File Name = " + name);
 
-			if (name != null && name.length() > 0) {
-				try {
-					// Tạo file tại Server.
-					String changeName = LocalTime.now().toString().replaceAll("[^A-Za-z0-9]", "");
-					String nameupString = changeName + name;
-					File serverFile = new File(
-							uploadRootDir.getAbsolutePath() + File.separator + nameupString.toLowerCase());
+				if (name != null && name.length() > 0) {
+					try {
+						// Tạo file tại Server.
+						String changeName = LocalTime.now().toString().replaceAll("[^A-Za-z0-9]", "");
+						String nameupString = changeName + name;
+						File serverFile = new File(
+								uploadRootDir.getAbsolutePath() + File.separator + nameupString.toLowerCase());
 
-					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-					stream.write(fileData.getBytes());
-					stream.close();
-					//
-					MedicalInfo_Img newImg = new MedicalInfo_Img();
-					newImg.setName(nameupString);
-					newImg.setMedicalinfo(medicalInfo);
-					newImg.setCreated_at(date);
-					newImg.setUpdated_at(date);
-					medicalInfo_Imgs.add(newImg);
-					System.out.println("Write file: " + serverFile);
-				} catch (Exception e) {
-					System.out.println("Error Write file: " + name);
+						BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+						stream.write(fileData.getBytes());
+						stream.close();
+						//
+						MedicalInfo_Img newImg = new MedicalInfo_Img();
+						newImg.setName(nameupString);
+						newImg.setMedicalinfo(medicalInfo);
+						newImg.setCreated_at(date);
+						newImg.setUpdated_at(date);
+						medicalInfo_Imgs.add(newImg);
+						System.out.println("Write file: " + serverFile);
+					} catch (Exception e) {
+						System.out.println("Error Write file: " + name);
+					}
 				}
 			}
 		}
@@ -145,7 +147,11 @@ public class MedicalInfoDAO {
 			medicalInfo.setEnabled(true);
 			medicalInfo.setCreated_at(data.getCreated_at());
 			medicalInfo.setUpdated_at(data.getUpdated_at());
-			medicalInfo.setListImg(medicalInfo_Imgs);
+			if(files != null && files.length > 0) {
+				medicalInfo.setListImg(medicalInfo_Imgs);
+			}else {
+				medicalInfo.setListImg(null);
+			}
 			session.save(medicalInfo);
 		} catch (Exception e) {
 			// TODO: handle exception

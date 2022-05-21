@@ -132,6 +132,15 @@ public class Posts {
 		this.posts_Cmts = posts_Cmts;
 	}
 
+	public Set<Likes> getLikes() {
+		return likes;
+	}
+
+	public Set<Posts_Cmt> getPosts_Cmts() {
+		return posts_Cmts;
+	}
+	
+	
 
 	
 }

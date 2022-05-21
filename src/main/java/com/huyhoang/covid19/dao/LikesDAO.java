@@ -72,4 +72,24 @@ public class LikesDAO {
 			return false;
 		}
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<Likes> getLikePost(String username, Integer id_post) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Users user = authDAO.loadUsername(username);
+		
+		String hqlString = "from Likes where id_post = :id_post";
+		Query query = session.createQuery(hqlString, Likes.class);
+		query.setParameter("id_post", id_post);
+		
+		List<Likes> list = query.list();
+		
+		if (list != null) {
+			System.out.print("LIST LIKE SV" + list);
+			return list;
+		} else {
+			return null;
+		}
+	}
 }

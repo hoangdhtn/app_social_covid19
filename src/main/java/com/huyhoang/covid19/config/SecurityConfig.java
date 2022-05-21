@@ -89,6 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// Like
 				.antMatchers(HttpMethod.POST, "/api/like**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.DELETE, "/api/like**").access("hasRole('ROLE_USER')")
+				.antMatchers(HttpMethod.GET, "/api/getlike**").access("hasRole('ROLE_USER')")
 				// Comment
 				.antMatchers(HttpMethod.GET, "/api/comment**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.POST, "/api/comment**").access("hasRole('ROLE_USER')")

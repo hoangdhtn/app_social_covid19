@@ -18,8 +18,8 @@ public class PostsServiceImpl implements PostsService {
 	@Autowired
 	private PostsDAO postsDAO;
 	
-	public List<Posts> getAllPosts(){
-		return postsDAO.getAllPosts();
+	public List<Posts> getAllPosts(int position, int pageSize){
+		return postsDAO.getAllPosts( position,  pageSize);
 	}
 	
 	public List<Posts> getAllPostsUser(Integer id_user){

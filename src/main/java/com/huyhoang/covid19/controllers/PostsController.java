@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.huyhoang.covid19.entities.Notification;
 import com.huyhoang.covid19.entities.Posts;
 import com.huyhoang.covid19.entities.Posts_Cmt;
 import com.huyhoang.covid19.entities.Users;
@@ -34,17 +35,18 @@ public class PostsController {
 	private JwtService jwtService = new JwtService();
 
 	// Get all post
-	@RequestMapping(value = "/posts", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+	@RequestMapping(value = "/posts/{position}/{pagesize}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<List<Posts>> getAllPosts() {
+	public ResponseEntity<List<Posts>> getAllPosts(@PathVariable(name = "position") Integer position,
+			@PathVariable(name = "pagesize") Integer pagesize) {
 
 		HttpStatus httpStatus = null;
 
 		List<Posts> list = null;
 		try {
-			if (postsService.getAllPosts() != null) {
-				list = postsService.getAllPosts();
+			if (postsService.getAllPosts(position,pagesize) != null) {
+				list = postsService.getAllPosts(position,pagesize);
 				httpStatus = HttpStatus.OK;
 			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;
@@ -89,28 +91,30 @@ public class PostsController {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,
 			MediaType.MULTIPART_FORM_DATA_VALUE }, consumes = { "multipart/form-data" })
 	@ResponseBody
-	public ResponseEntity<String> addPost(@RequestHeader("Authorization") String authHeader, @ModelAttribute Posts data,
-			@RequestParam("files") MultipartFile[] files) {
+	public ResponseEntity<Notification> addPost(@RequestHeader("Authorization") String authHeader, @ModelAttribute Posts data,
+			@RequestParam(name = "files", required = false) MultipartFile[] files) {
 		
 		String username = jwtService.getUsernameFromToken(authHeader);
 		HttpStatus httpStatus = null;
 		String result = "";
-
+		Notification notification = new Notification();
 		// Add medical
 		try {
 			if (postsService.addPost(username, data, files) != null) {
 				result = "Add post success";
+				notification.setStatus("success");
 				httpStatus = HttpStatus.OK;
 			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;
 				result = "Add post fail";
+				notification.setStatus("fail");
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
-		return new ResponseEntity<String>(result, httpStatus);
+		return new ResponseEntity<Notification>(notification, httpStatus);
 	}
 	
 	// Update post
@@ -153,25 +157,28 @@ public class PostsController {
 		@RequestMapping(value = "/posts/{id_post}", method = RequestMethod.DELETE, produces = {
 				MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 		@ResponseBody
-		public ResponseEntity<String> deletePost(@RequestHeader("Authorization") String authHeader,
+		public ResponseEntity<Notification> deletePost(@RequestHeader("Authorization") String authHeader,
 				@PathVariable("id_post") Integer id_post) {
 			HttpStatus httpStatus = null;
 			String result = "";
 			String username = jwtService.getUsernameFromToken(authHeader);
+			Notification notification = new Notification();
 			try {
 				if (postsService.deletePost(username, id_post)) {
 					result = "Delete post success";
+					notification.setStatus("success");
 					httpStatus = HttpStatus.OK;
 				} else {
 					httpStatus = HttpStatus.BAD_REQUEST;
 					result = "Delete post fail";
+					notification.setStatus("fail");
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
 				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
 
-			return new ResponseEntity<String>(result, httpStatus);
+			return new ResponseEntity<Notification>(notification, httpStatus);
 		}
 		
 	// Get comment post
@@ -201,49 +208,49 @@ public class PostsController {
 		@RequestMapping(value = "/comment/{id_post}", method = RequestMethod.POST, produces = {
 				MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 		@ResponseBody
-		public ResponseEntity<String> addCommentPost(@RequestHeader("Authorization") String authHeader,
+		public ResponseEntity<Notification> addCommentPost(@RequestHeader("Authorization") String authHeader,
 				@PathVariable("id_post") Integer id_post, @RequestBody Posts_Cmt posts_Cmt) {
 			HttpStatus httpStatus = null;
-			String result = "";
+			Notification notification = new Notification();
 			String username = jwtService.getUsernameFromToken(authHeader);
 			try {
 				if (postsService.addCommentPost(username, id_post, posts_Cmt)) {
-					result = "Add comment success";
+					notification.setStatus("success");
 					httpStatus = HttpStatus.OK;
 				} else {
 					httpStatus = HttpStatus.BAD_REQUEST;
-					result = "Add comment fail";
+					notification.setStatus("fail");
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
 				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
 
-			return new ResponseEntity<String>(result, httpStatus);
+			return new ResponseEntity<Notification>(notification, httpStatus);
 		}
 		
 	// Delete comment post
 		@RequestMapping(value = "/comment/{id_cmt}", method = RequestMethod.DELETE, produces = {
 				MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 		@ResponseBody
-		public ResponseEntity<String> deleteCommentPost(@RequestHeader("Authorization") String authHeader,
+		public ResponseEntity<Notification> deleteCommentPost(@RequestHeader("Authorization") String authHeader,
 				@PathVariable("id_cmt") Integer id_cmt) {
 			HttpStatus httpStatus = null;
-			String result = "";
+			Notification notification = new Notification();
 			String username = jwtService.getUsernameFromToken(authHeader);
 			try {
 				if (postsService.deleteCommentPost(username, id_cmt)) {
-					result = "Delete comment success";
+					notification.setStatus("success");
 					httpStatus = HttpStatus.OK;
 				} else {
 					httpStatus = HttpStatus.BAD_REQUEST;
-					result = "Delete comment fail";
+					notification.setStatus("fail");
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
 				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
 
-			return new ResponseEntity<String>(result, httpStatus);
+			return new ResponseEntity<Notification>(notification, httpStatus);
 		}
 }

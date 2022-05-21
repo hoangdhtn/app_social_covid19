@@ -96,26 +96,32 @@ public class MedicalInfoController {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,
 			MediaType.MULTIPART_FORM_DATA_VALUE }, consumes = { "multipart/form-data" })
 	@ResponseBody
-	public ResponseEntity<String> addMedicalInfo(@RequestHeader("Authorization") String authHeader,
-			@ModelAttribute MedicalInfo data, @RequestParam("files") MultipartFile[] files) {
+	public ResponseEntity<Notification> addMedicalInfo(@RequestHeader("Authorization") String authHeader,
+			@ModelAttribute MedicalInfo data, @RequestParam(name = "files", required = false) MultipartFile[] files) {
 		HttpStatus httpStatus = null;
 		String result = "";
 		String username = jwtService.getUsernameFromToken(authHeader);
+		
+		Notification notification = new Notification();
 		// Add medical
 		try {
 			if (medicalInfoService.addMedicalInfo(username, data, files) != null) {
 				result = "Add medical success";
+				notification.setStatus("success");
+				
 				httpStatus = HttpStatus.OK;
 			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;
+				notification.setStatus("fail");
 				result = "Add medical fail";
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
+			System.out.print(files.toString());
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
-		return new ResponseEntity<String>(result, httpStatus);
+		return new ResponseEntity<Notification>(notification, httpStatus);
 	}
 
 	// Update medical
