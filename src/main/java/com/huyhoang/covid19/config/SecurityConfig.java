@@ -104,6 +104,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/api/category**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.POST, "/api/category**").access("hasRole('ROLE_ADMIN')")
 				.antMatchers(HttpMethod.DELETE, "/api/category**").access("hasRole('ROLE_ADMIN')")
+				//Department
+				.antMatchers(HttpMethod.GET, "/api/departments**").access("hasRole('ROLE_USER')")
+				.antMatchers(HttpMethod.POST, "/api/departments**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.DELETE, "/api/departments**").access("hasRole('ROLE_ADMIN')")
+				//Doctor
+				.antMatchers(HttpMethod.GET, "/api/doctors**").access("hasRole('ROLE_USER')")
+				.antMatchers(HttpMethod.POST, "/api/doctors**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.DELETE, "/api/doctors**").access("hasRole('ROLE_ADMIN')")
 				.and()
 				.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
