@@ -1,13 +1,20 @@
 package com.huyhoang.covid19.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "doctors")
@@ -45,6 +52,10 @@ public class Doctors {
 	@ManyToOne
 	@JoinColumn(name = "department_id", nullable = false)
 	private Departments departments;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "doctor")
+	@JsonIgnore
+	private Set<Slots> slots = new HashSet<>();
 	
 	public Doctors() {
 	}
@@ -139,6 +150,14 @@ public class Doctors {
 
 	public void setDepartments(Departments departments) {
 		this.departments = departments;
+	}
+
+	public Set<Slots> getSlots() {
+		return slots;
+	}
+
+	public void setSlots(Set<Slots> slots) {
+		this.slots = slots;
 	}
 
 	

@@ -112,6 +112,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/api/doctors**").access("hasRole('ROLE_USER')")
 				.antMatchers(HttpMethod.POST, "/api/doctors**").access("hasRole('ROLE_ADMIN')")
 				.antMatchers(HttpMethod.DELETE, "/api/doctors**").access("hasRole('ROLE_ADMIN')")
+				//Slot
+				.antMatchers(HttpMethod.GET, "/api/slots**").access("hasRole('ROLE_DOCTOR') or hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.POST, "/api/slots**").access("hasRole('ROLE_USER')")
+				.antMatchers(HttpMethod.DELETE, "/api/slots**").access("hasRole('ROLE_ADMIN')")
+				.antMatchers(HttpMethod.GET, "/api/slots/available**").access("hasRole('ROLE_USER')")
 				.and()
 				.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
