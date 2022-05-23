@@ -42,6 +42,23 @@ public class DoctorsDAO {
 		}
 
 	}
+	
+	public List<Doctors> getDoctorsByDepartment(int id_depart) {
+		Session session = sessionFactory.getCurrentSession();
+
+		String hql = "FROM Doctors n WHERE n.departments.id = :id_depart";
+		Query query = session.createQuery(hql, Doctors.class);
+		query.setParameter("id_depart", id_depart);
+
+		List<Doctors> list = query.list();
+
+		if (list != null && list.size() > 0) {
+			return list;
+		} else {
+			return null;
+		}
+
+	}
 
 	public Doctors addDoctors(Doctors data, Departments departments, MultipartFile[] files) {
 		Session session = sessionFactory.getCurrentSession();

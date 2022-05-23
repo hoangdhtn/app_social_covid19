@@ -16,4 +16,6 @@ public interface DoctorsService {
 	public Doctors updateDoctors(Doctors data, Departments departments ,MultipartFile[] files);
 	
 	public boolean deleteDoctor(int id_doctor);
+	
+	public List<Doctors> getDoctorsByDepartment(int id_depart);
 }

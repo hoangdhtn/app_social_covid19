@@ -58,6 +58,30 @@ public class DoctorsController {
 		}
 		return new ResponseEntity<List<Doctors>>(list, httpStatus);
 	}
+	
+	// Get doctors by department
+		@RequestMapping(value = "/doctors/{id_depart}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE })
+		@ResponseBody
+		public ResponseEntity<List<Doctors>> getDoctorsbyDepartment(@PathVariable("id_depart") int id_depart) {
+			HttpStatus httpStatus = null;
+
+			List<Doctors> list = null;
+			try {
+				list = doctorsService.getDoctorsByDepartment(id_depart);
+				if (list != null) {
+					httpStatus = HttpStatus.OK;
+				} else {
+					list = null;
+					httpStatus = HttpStatus.BAD_REQUEST;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+				System.out.print("Loi department " + e.toString());
+			}
+			return new ResponseEntity<List<Doctors>>(list, httpStatus);
+		}
 
 	// Add doctor, sử dụng form data bởi vì cần upload file img
 	@RequestMapping(value = "/doctors", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,

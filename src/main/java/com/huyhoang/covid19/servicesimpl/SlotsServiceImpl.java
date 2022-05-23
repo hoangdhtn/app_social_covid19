@@ -1,6 +1,7 @@
 package com.huyhoang.covid19.servicesimpl;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.huyhoang.covid19.dao.SlotsDAO;
 import com.huyhoang.covid19.entities.ListTimeAvailable;
 import com.huyhoang.covid19.entities.Slots;
+import com.huyhoang.covid19.entities.TimeAvailable;
 import com.huyhoang.covid19.services.SlotsService;
 
 @Service
@@ -29,7 +31,7 @@ public class SlotsServiceImpl implements SlotsService {
 		return slotsDAO.getSlotBusyByDoctor(id_doctor);
 	}
 	
-	public ListTimeAvailable getSlotByDoctor(int id_doctor, String date){
+	public ArrayList<TimeAvailable> getSlotByDoctor(int id_doctor, String date){
 		return slotsDAO.getSlotByDoctor(id_doctor,date);
 	}
 	

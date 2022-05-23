@@ -34,4 +34,8 @@ public class DoctorsServiceImpl implements DoctorsService{
 	public boolean deleteDoctor(int id_doctor) {
 		return doctorsDAO.deleteDoctor(id_doctor);
 	}
+	
+	public List<Doctors> getDoctorsByDepartment(int id_depart){
+		return doctorsDAO.getDoctorsByDepartment(id_depart);
+	}
 }

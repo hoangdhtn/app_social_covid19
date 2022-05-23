@@ -76,7 +76,7 @@ public class Users implements java.io.Serializable {
 	@JsonFormat(pattern = "yy/MM/dd")
 	@Column(name = "data_of_birth")
 	private String data_of_birth;
-	
+
 	@Column(name = "forget_pass_key")
 	private String forget_pass_key;
 
@@ -103,6 +103,10 @@ public class Users implements java.io.Serializable {
 	// News
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<News> news = new HashSet<>();
+
+	// Appointment
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<AppointmentOrder> appointmentOrders = new HashSet<>();
 
 	public Users() {
 
@@ -271,5 +275,11 @@ public class Users implements java.io.Serializable {
 	public void setNews(Set<News> news) {
 		this.news = news;
 	}
+
+	public void setAppointmentOrders(Set<AppointmentOrder> appointmentOrders) {
+		this.appointmentOrders = appointmentOrders;
+	}
+	
+	
 
 }

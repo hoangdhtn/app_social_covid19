@@ -4,15 +4,17 @@ import java.time.LocalTime;
 
 public class TimeAvailable {
 	int index;
-	LocalTime time;
+	LocalTime begin_at;
+	LocalTime end_at;
 	
 	public TimeAvailable() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TimeAvailable(int index, LocalTime time) {
+	public TimeAvailable(int index, LocalTime begin_at, LocalTime end_at) {
 		this.index = index;
-		this.time = time;
+		this.begin_at = begin_at;
+		this.end_at = end_at;
 	}
 
 	public int getIndex() {
@@ -23,13 +25,24 @@ public class TimeAvailable {
 		this.index = index;
 	}
 
-	public LocalTime getTime() {
-		return time;
+	public LocalTime getBegin_at() {
+		return begin_at;
 	}
 
-	public void setTime(LocalTime time) {
-		this.time = time;
+	public void setBegin_at(LocalTime begin_at) {
+		this.begin_at = begin_at;
 	}
+
+	public LocalTime getEnd_at() {
+		return end_at;
+	}
+
+	public void setEnd_at(LocalTime end_at) {
+		this.end_at = end_at;
+	}
+	
+	
+
 	
 	
 }

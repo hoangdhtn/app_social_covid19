@@ -68,7 +68,7 @@ public class SlotsDAO {
 	
 	// Lấy danh sách booking
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public ListTimeAvailable getSlotByDoctor(int id_doctor, String date){
+	public ArrayList<TimeAvailable> getSlotByDoctor(int id_doctor, String date){
 		Session session = sessionFactory.getCurrentSession();
 		Session sessionSlot = sessionFactory.getCurrentSession();
 		Doctors doctors;
@@ -93,10 +93,11 @@ public class SlotsDAO {
 	    	TimeAvailable timeAvailable = new TimeAvailable();
 	        times.add( time ) ;
 	        timeAvailable.setIndex(i - 1);
-	    	timeAvailable.setTime(time);
+	    	timeAvailable.setBegin_at(time);
 	        // Set up next loop.
 	    	sTimeAvai.add(timeAvailable);
-	        time = time.plusMinutes( gapInMinutes ) ;
+	        time = time.plusMinutes( gapInMinutes );
+	        timeAvailable.setEnd_at(time);
 	        
 	    }
 	 
@@ -122,13 +123,14 @@ public class SlotsDAO {
 	    }
 	    
 	    
-	    listTimeAvailable.setListime(sTimeAvai);
+	    //listTimeAvailable.setListime(sTimeAvai);
 		
 	    System.out.println( times.size() + " time slots: " ) ;
 	    System.out.println( times ) ;
-	    return listTimeAvailable;
+	    return sTimeAvai;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Slots bookingSlot(Slots data) {
 		Session session = sessionFactory.getCurrentSession();
 		Session sessionSlot = sessionFactory.getCurrentSession();

@@ -52,11 +52,16 @@ public class Doctors {
 	@ManyToOne
 	@JoinColumn(name = "department_id", nullable = false)
 	private Departments departments;
-	
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "doctor")
 	@JsonIgnore
 	private Set<Slots> slots = new HashSet<>();
-	
+
+	// Appointment
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "doctor")
+	@JsonIgnore
+	private Set<AppointmentOrder> appointmentOrders = new HashSet<>();
+
 	public Doctors() {
 	}
 
@@ -160,5 +165,14 @@ public class Doctors {
 		this.slots = slots;
 	}
 
+	public Set<AppointmentOrder> getAppointmentOrders() {
+		return appointmentOrders;
+	}
+
+	public void setAppointmentOrders(Set<AppointmentOrder> appointmentOrders) {
+		this.appointmentOrders = appointmentOrders;
+	}
 	
+	
+
 }

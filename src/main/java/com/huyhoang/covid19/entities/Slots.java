@@ -1,15 +1,21 @@
 package com.huyhoang.covid19.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "slots")
@@ -41,6 +47,11 @@ public class Slots {
 	@ManyToOne
 	@JoinColumn(name = "doctor_id", nullable = false)
 	private Doctors doctor;
+
+	// Appointment
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "slot")
+	@JsonIgnore
+	private Set<AppointmentOrder> appointmentOrders = new HashSet<>();
 
 	public Slots() {
 
@@ -109,6 +120,14 @@ public class Slots {
 	public void setDoctor(Doctors doctor) {
 		this.doctor = doctor;
 	}
-	
+
+	public Set<AppointmentOrder> getAppointmentOrders() {
+		return appointmentOrders;
+	}
+
+	public void setAppointmentOrders(Set<AppointmentOrder> appointmentOrders) {
+		this.appointmentOrders = appointmentOrders;
+	}
+
 	
 }

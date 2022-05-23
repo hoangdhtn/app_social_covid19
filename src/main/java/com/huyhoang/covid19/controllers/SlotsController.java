@@ -1,6 +1,7 @@
 package com.huyhoang.covid19.controllers;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.huyhoang.covid19.entities.Doctors;
 import com.huyhoang.covid19.entities.ListTimeAvailable;
 import com.huyhoang.covid19.entities.Notification;
 import com.huyhoang.covid19.entities.Slots;
+import com.huyhoang.covid19.entities.TimeAvailable;
 import com.huyhoang.covid19.entities.Users;
 import com.huyhoang.covid19.services.JwtService;
 import com.huyhoang.covid19.services.SlotsService;
@@ -103,11 +105,11 @@ public class SlotsController {
 	@RequestMapping(value = "/slots/available/{id_doctor}", method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<ListTimeAvailable> getSlotByDoctor(SecurityContextHolderAwareRequestWrapper request,
+	public ResponseEntity<ArrayList<TimeAvailable>> getSlotByDoctor(SecurityContextHolderAwareRequestWrapper request,
 			@PathVariable("id_doctor") int id_doctor, @RequestParam("date") String date) {
 
 		HttpStatus httpStatus = null;
-		ListTimeAvailable list = null;
+		ArrayList<TimeAvailable> list = null;
 
 		try {
 			list = slotsService.getSlotByDoctor(id_doctor, date);
@@ -123,7 +125,7 @@ public class SlotsController {
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 			System.out.print("Loi slot " + e.toString());
 		}
-		return new ResponseEntity<ListTimeAvailable>(list, httpStatus);
+		return new ResponseEntity<ArrayList<TimeAvailable>>(list, httpStatus);
 
 	}
 
