@@ -1,5 +1,6 @@
 package com.huyhoang.covid19.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -37,6 +38,27 @@ public class AppointmentOrderDAO {
 			return list;
 		} else {
 			return null;
+		}
+	}
+	
+	public AppointmentOrder addAdAppointmentOrder(AppointmentOrder data, String username) {
+		Session session = sessionFactory.getCurrentSession();
+		Date date = new Date();
+		Users user = authDAO.loadUsername(username);
+		AppointmentOrder appointmentOrder = new AppointmentOrder();
+		try {
+			appointmentOrder.setUser(user);
+			appointmentOrder.setDoctor(data.getDoctor());
+			appointmentOrder.setSlot(data.getSlot());
+			appointmentOrder.setOrder_status(data.getOrder_status());
+			appointmentOrder.setPayment_status(true);
+			appointmentOrder.setCreated_at(date);
+			session.save(appointmentOrder);
+			return appointmentOrder;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+			
 		}
 	}
 }

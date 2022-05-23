@@ -7,4 +7,6 @@ import com.huyhoang.covid19.entities.AppointmentOrder;
 public interface AppoitmentService {
 
 	public List<AppointmentOrder> getMyListAppointmentOrders(String username);
+	
+	public AppointmentOrder addAdAppointmentOrder(AppointmentOrder data, String username);
 }

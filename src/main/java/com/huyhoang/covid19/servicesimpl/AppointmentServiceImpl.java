@@ -20,4 +20,8 @@ public class AppointmentServiceImpl implements AppoitmentService {
 	public List<AppointmentOrder> getMyListAppointmentOrders(String username){
 		return appointmentOrderDAO.getMyListAppointmentOrders(username);
 	}
+	
+	public AppointmentOrder addAdAppointmentOrder(AppointmentOrder data, String username) {
+		return appointmentOrderDAO.addAdAppointmentOrder(data, username);
+	}
 }
