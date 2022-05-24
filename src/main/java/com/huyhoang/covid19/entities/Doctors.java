@@ -46,6 +46,9 @@ public class Doctors {
 	@Column(name = "price")
 	private Integer price;
 
+	@Column(name = "rating")
+	private Integer rating;
+
 	@Column(name = "enabled")
 	private Boolean enabled;
 
@@ -141,6 +144,14 @@ public class Doctors {
 		this.price = price;
 	}
 
+	public Integer getRating() {
+		return rating;
+	}
+
+	public void setRating(Integer rating) {
+		this.rating = rating;
+	}
+
 	public Boolean getEnabled() {
 		return enabled;
 	}
@@ -172,7 +183,5 @@ public class Doctors {
 	public void setAppointmentOrders(Set<AppointmentOrder> appointmentOrders) {
 		this.appointmentOrders = appointmentOrders;
 	}
-	
-	
 
 }

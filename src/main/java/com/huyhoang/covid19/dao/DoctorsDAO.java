@@ -128,6 +128,7 @@ public class DoctorsDAO {
 			doctors.setDescription(data.getDescription());
 			doctors.setDuration(data.getDuration());
 			doctors.setPrice(data.getPrice());
+			doctors.setRating(data.getRating());
 			doctors.setEnabled(data.getEnabled());
 
 			Departments dep = departments;
@@ -210,6 +211,7 @@ public class DoctorsDAO {
 			doctors.setDescription(data.getDescription());
 			doctors.setDuration(data.getDuration());
 			doctors.setPrice(data.getPrice());
+			doctors.setRating(data.getRating());
 			doctors.setEnabled(data.getEnabled());
 
 			Departments dep = departments;
