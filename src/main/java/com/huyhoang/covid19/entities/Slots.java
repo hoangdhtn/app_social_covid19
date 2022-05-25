@@ -1,5 +1,6 @@
 package com.huyhoang.covid19.entities;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,25 +45,44 @@ public class Slots {
 	@Column(name = "enabled")
 	private boolean enabled;
 
+	@Column(name = "order_info")
+	private String order_info;
+
+	@Column(name = "payment_status")
+	private boolean payment_status;
+
+	@Column(name = "created_at")
+	private Date created_at;
+
+	@Column(name = "updated_at")
+	private Date updated_at;
+
 	@ManyToOne
 	@JoinColumn(name = "doctor_id", nullable = false)
 	private Doctors doctor;
 
-	// Appointment
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "slot")
-	@JsonIgnore
-	private Set<AppointmentOrder> appointmentOrders = new HashSet<>();
+	// n - 1: User
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private Users user;
 
 	public Slots() {
 
 	}
 
-	public Slots(String date, String begin_at, String end_at, int index_day, boolean enabled) {
+	public Slots(String date, String begin_at, String end_at, int index_day, boolean enabled, String order_info,
+			boolean payment_status, Date created_at, Date updated_at, Doctors doctor, Users user) {
 		this.date = date;
 		this.begin_at = begin_at;
 		this.end_at = end_at;
 		this.index_day = index_day;
 		this.enabled = enabled;
+		this.order_info = order_info;
+		this.payment_status = payment_status;
+		this.created_at = created_at;
+		this.updated_at = updated_at;
+		this.doctor = doctor;
+		this.user = user;
 	}
 
 	public Integer getId() {
@@ -121,13 +141,46 @@ public class Slots {
 		this.doctor = doctor;
 	}
 
-	public Set<AppointmentOrder> getAppointmentOrders() {
-		return appointmentOrders;
+	public String getOrder_info() {
+		return order_info;
 	}
 
-	public void setAppointmentOrders(Set<AppointmentOrder> appointmentOrders) {
-		this.appointmentOrders = appointmentOrders;
+	public void setOrder_info(String order_info) {
+		this.order_info = order_info;
 	}
 
 	
+	public boolean isPayment_status() {
+		return payment_status;
+	}
+
+	public void setPayment_status(boolean payment_status) {
+		this.payment_status = payment_status;
+	}
+
+	public Date getCreated_at() {
+		return created_at;
+	}
+
+	public void setCreated_at(Date created_at) {
+		this.created_at = created_at;
+	}
+
+	public Date getUpdated_at() {
+		return updated_at;
+	}
+
+	public void setUpdated_at(Date updated_at) {
+		this.updated_at = updated_at;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+	
+
 }

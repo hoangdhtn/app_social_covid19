@@ -16,9 +16,11 @@ public interface SlotsService {
 	
 	public List<Slots> getSlotBusyByDoctor(int id_doctor);
 	
+	public List<Slots> getSlotsUser(String username);
+	
 	public ArrayList<TimeAvailable> getSlotByDoctor(int id_doctor, String date);
 	
-	public Slots bookingSlot(Slots data);
+	public Slots bookingSlot(Slots data, String username);
 	
 	public boolean deleteBookingSlot(int id_slot);
 }

@@ -31,12 +31,16 @@ public class SlotsServiceImpl implements SlotsService {
 		return slotsDAO.getSlotBusyByDoctor(id_doctor);
 	}
 	
+	public List<Slots> getSlotsUser(String username){
+		return slotsDAO.getSlotsUser(username);
+	}
+	
 	public ArrayList<TimeAvailable> getSlotByDoctor(int id_doctor, String date){
 		return slotsDAO.getSlotByDoctor(id_doctor,date);
 	}
 	
-	public Slots bookingSlot(Slots data) {
-		return slotsDAO.bookingSlot(data);
+	public Slots bookingSlot(Slots data, String username) {
+		return slotsDAO.bookingSlot(data, username);
 	}
 	
 	public boolean deleteBookingSlot(int id_slot) {

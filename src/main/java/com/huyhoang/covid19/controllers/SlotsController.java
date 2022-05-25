@@ -129,16 +129,45 @@ public class SlotsController {
 
 	}
 
-	// Get booking Slot
+	// Get All Slots User
+	@RequestMapping(value = "/slots/user", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public ResponseEntity<List<Slots>> getSlotsUser(SecurityContextHolderAwareRequestWrapper request) {
+
+		HttpStatus httpStatus = null;
+		List<Slots> list = null;
+
+		try {
+			list = slotsService.getSlotsUser(request.getUserPrincipal().getName());
+			if (list != null) {
+				httpStatus = HttpStatus.OK;
+			} else {
+				list = null;
+				httpStatus = HttpStatus.BAD_REQUEST;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			// TODO: handle exception
+			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+			System.out.print("Loi slot " + e.toString());
+		}
+		return new ResponseEntity<List<Slots>>(list, httpStatus);
+
+	}
+
+	// Booking Slot
 	@RequestMapping(value = "/slots", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<Slots> bookingSlot(@RequestBody Slots data) {
+	public ResponseEntity<Slots> bookingSlot(SecurityContextHolderAwareRequestWrapper request,
+			@RequestBody Slots data) {
 		HttpStatus httpStatus = null;
 		Slots slots = null;
+		String username = request.getUserPrincipal().getName();
 		try {
-			slots = slotsService.bookingSlot(data);
-			if(slots != null) {
+			slots = slotsService.bookingSlot(data, username);
+			if (slots != null) {
 				httpStatus = HttpStatus.OK;
 			} else {
 				slots = null;
@@ -146,31 +175,32 @@ public class SlotsController {
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
+			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 			System.out.print("Loi booking " + e.toString());
 		}
 		return new ResponseEntity<Slots>(slots, httpStatus);
 	}
-	
+
 	// Delete booking Slot
-		@RequestMapping(value = "/slots/{id_slot}", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE,
-				MediaType.APPLICATION_XML_VALUE })
-		@ResponseBody
-		public ResponseEntity<Notification> deletebookingSlot(@PathVariable("id_slot") int id_slot) {
-			HttpStatus httpStatus = null;
-			Notification notification = new Notification();
-			try {
-				if(slotsService.deleteBookingSlot(id_slot)) {
-					httpStatus = HttpStatus.OK;
-					notification.setStatus("success");
-				}else {
-					httpStatus = HttpStatus.BAD_REQUEST;
-					notification.setStatus("fail");
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
+	@RequestMapping(value = "/slots/{id_slot}", method = RequestMethod.DELETE, produces = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public ResponseEntity<Notification> deletebookingSlot(@PathVariable("id_slot") int id_slot) {
+		HttpStatus httpStatus = null;
+		Notification notification = new Notification();
+		try {
+			if (slotsService.deleteBookingSlot(id_slot)) {
+				httpStatus = HttpStatus.OK;
+				notification.setStatus("success");
+			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;
 				notification.setStatus("fail");
 			}
-			return new ResponseEntity<Notification>(notification, httpStatus);
+		} catch (Exception e) {
+			// TODO: handle exception
+			httpStatus = HttpStatus.BAD_REQUEST;
+			notification.setStatus("fail");
 		}
+		return new ResponseEntity<Notification>(notification, httpStatus);
+	}
 }

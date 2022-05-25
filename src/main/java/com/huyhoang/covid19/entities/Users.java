@@ -28,6 +28,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
@@ -104,9 +105,10 @@ public class Users implements java.io.Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<News> news = new HashSet<>();
 
-	// Appointment
+	// SLot
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	private Set<AppointmentOrder> appointmentOrders = new HashSet<>();
+	@JsonIgnore
+	private Set<Slots> slots = new HashSet<>();
 
 	public Users() {
 
@@ -276,10 +278,14 @@ public class Users implements java.io.Serializable {
 		this.news = news;
 	}
 
-	public void setAppointmentOrders(Set<AppointmentOrder> appointmentOrders) {
-		this.appointmentOrders = appointmentOrders;
+	public void setSlots(Set<Slots> slots) {
+		this.slots = slots;
 	}
-	
-	
+
+	public Set<Slots> getSlots() {
+		return slots;
+	}
+
+
 
 }
