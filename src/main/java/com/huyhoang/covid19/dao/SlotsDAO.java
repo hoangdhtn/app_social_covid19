@@ -144,13 +144,15 @@ public class SlotsDAO {
 			listSlotsBusy = getSlotBusyByDoctor(id_doctor);
 
 			// Kiểm tra xem khoản thời gian nào đã tồn tại thì xóa trong mảng times
-			for (int i = 0; i < times.size(); i++) {
-				for (int j = 0; j < listSlotsBusy.size(); j++) {
-					LocalTime aLocalTime = LocalTime.parse(listSlotsBusy.get(j).getBegin_at());
-					// System.out.println(times.get(i).compareTo(aLocalTime));
-					if (times.get(i).compareTo(aLocalTime) == 0) {
-						times.remove(i);
-						sTimeAvai.remove(i);
+			if(listSlotsBusy != null) {
+				for (int i = 0; i < times.size(); i++) {
+					for (int j = 0; j < listSlotsBusy.size(); j++) {
+						LocalTime aLocalTime = LocalTime.parse(listSlotsBusy.get(j).getBegin_at());
+						// System.out.println(times.get(i).compareTo(aLocalTime));
+						if (times.get(i).compareTo(aLocalTime) == 0) {
+							times.remove(i);
+							sTimeAvai.remove(i);
+						}
 					}
 				}
 			}

@@ -102,8 +102,8 @@ public class SlotsController {
 	}
 
 	// Get All Slot by doctor
-	@RequestMapping(value = "/slots/available/{id_doctor}", method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@RequestMapping(value = "/slots/available/{id_doctor}", method = RequestMethod.POST, produces = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, consumes = { "multipart/form-data" })
 	@ResponseBody
 	public ResponseEntity<ArrayList<TimeAvailable>> getSlotByDoctor(SecurityContextHolderAwareRequestWrapper request,
 			@PathVariable("id_doctor") int id_doctor, @RequestParam("date") String date) {
@@ -130,8 +130,8 @@ public class SlotsController {
 	}
 
 	// Get All Slots User
-	@RequestMapping(value = "/slots/user", method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@RequestMapping(value = "/slots/user", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
 	public ResponseEntity<List<Slots>> getSlotsUser(SecurityContextHolderAwareRequestWrapper request) {
 
