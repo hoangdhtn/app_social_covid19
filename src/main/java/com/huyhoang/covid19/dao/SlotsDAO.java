@@ -291,12 +291,15 @@ public class SlotsDAO {
 		Session session = sessionFactory.getCurrentSession();
 		boolean result;
 		try {
+			System.out.println(id_slot);
+			System.out.println(session.find(Slots.class, id_slot));
 			Slots slots = session.find(Slots.class, id_slot);
 			session.delete(slots);
 			result = true;
 		} catch (Exception e) {
 			// TODO: handle exception
 			result = false;
+			System.out.println("Failed delete : " + e.getMessage());
 		}
 		return result;
 	}
