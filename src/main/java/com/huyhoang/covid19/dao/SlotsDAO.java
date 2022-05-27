@@ -31,6 +31,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huyhoang.covid19.constants.ZoomConstanst;
 import com.huyhoang.covid19.entities.Departments;
 import com.huyhoang.covid19.entities.Doctors;
 import com.huyhoang.covid19.entities.ListTimeAvailable;
@@ -204,9 +205,9 @@ public class SlotsDAO {
 				session.save(slot);
 
 				// ======== TẠO ROOM ZOOM API ===========
-				String tokenZoomString = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxPcUJtY3lzUVgySUNnRFM0dGlNQ0EiLCJleHAiOjE3NjcwNzA4MDAsImlhdCI6MTY1MzQ0MzE2MH0.dux-zaKbjTckBh-5PGhkPkrzLiQCJZQ9ED_8j0uehcY";
+				String tokenZoomString = ZoomConstanst.TOKEN_ZOOM;
 				// request url
-				String url = "https://api.zoom.us/v2/users/IU6NJ328RH2HuK3fNRM0nQ/meetings";
+				String url = ZoomConstanst.URL_ZOOM;
 
 				// create an instance of RestTemplate
 				RestTemplate restTemplate = new RestTemplate();
