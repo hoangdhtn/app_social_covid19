@@ -55,22 +55,16 @@ public class UsersDAO {
 		Users user_token = authDAO.loadUsername(username);
 		Date date = new Date();
 		Users user = (Users) session.get(Users.class, user_token.getId());
-
+		System.out.println("ID U " + data.getHeight());
 		try {
 			if (user_token.getId() == user.getId()) {
 
 				MultipartFile[] fileDatas = files;
 
 				if (fileDatas.length > 0) {
-					System.out.println("AAA" + user.getAvatar_url());
+					System.out.println("AAA" + fileDatas.length);
 					if (user.getAvatar_url() != null) {
-						try {
-							Files.deleteIfExists(Paths.get("uploads", user.getAvatar_url()));
-						} catch (Exception e) {
-							// TODO: handle exception
-							System.out.println("AAA" + e);
-							e.printStackTrace();
-						}
+						
 
 						// Upload hình ảnh
 						File localfile = new File("");
@@ -90,6 +84,13 @@ public class UsersDAO {
 							System.out.println("Client File Name = " + name);
 
 							if (name != null && name.length() > 0) {
+								try {
+									Files.deleteIfExists(Paths.get("uploads", user.getAvatar_url()));
+								} catch (Exception e) {
+									// TODO: handle exception
+									System.out.println("AAA" + e);
+									e.printStackTrace();
+								}
 								try {
 									// Tạo file tại Server.
 									String changeName = LocalTime.now().toString().replaceAll("[^A-Za-z0-9]", "");
@@ -113,60 +114,19 @@ public class UsersDAO {
 						}
 					}
 
-				} else {
-					// Upload hình ảnh
-					File localfile = new File("");
-					String uploadRootPath = localfile.getAbsolutePath() + "\\uploads\\";
-					System.out.println("Current working directory : " + uploadRootPath);
-
-					File uploadRootDir = new File(uploadRootPath);
-					// Tạo thư mục gốc upload nếu nó không tồn tại.
-					if (!uploadRootDir.exists()) {
-						uploadRootDir.mkdirs();
-					}
-
-					for (MultipartFile fileData : fileDatas) {
-
-						// Tên file gốc tại Client.
-						String name = fileData.getOriginalFilename();
-						System.out.println("Client File Name = " + name);
-
-						if (name != null && name.length() > 0) {
-							try {
-								// Tạo file tại Server.
-								String changeName = LocalTime.now().toString().replaceAll("[^A-Za-z0-9]", "");
-								String nameupString = changeName + name;
-								File serverFile = new File(
-										uploadRootDir.getAbsolutePath() + File.separator + nameupString.toLowerCase());
-
-								BufferedOutputStream stream = new BufferedOutputStream(
-										new FileOutputStream(serverFile));
-								stream.write(fileData.getBytes());
-								stream.close();
-
-								user.setAvatar_url(nameupString);
-
-								System.out.println("Write file: " + nameupString);
-								System.out.println("Write file: " + serverFile);
-							} catch (Exception e) {
-								System.out.println("Error Write file: " + name);
-							}
-						}
-					}
-					user.setHeight(Integer.parseInt(data.getHeight().toString()));
-					user.setWeight(Integer.parseInt(data.getWeight().toString()));
-
-					user.setData_of_birth(data.getData_of_birth());
-					user.setEmail(data.getEmail());
-					user.setFull_name(data.getFull_name());
-					user.setLocation(data.getLocation());
-					user.setWork_at(data.getWork_at());
-					user.setIs_active(true);
-					user.setUpdated_at(date);
-
-					session.saveOrUpdate(user);
-					return user;
 				}
+				user.setHeight(Integer.parseInt(data.getHeight().toString()));
+				user.setWeight(Integer.parseInt(data.getWeight().toString()));
+
+				user.setData_of_birth(data.getData_of_birth());
+				user.setFull_name(data.getFull_name());
+				user.setLocation(data.getLocation());
+				user.setWork_at(data.getWork_at());
+				user.setIs_active(true);
+				user.setUpdated_at(date);
+
+				session.saveOrUpdate(user);
+				return user;
 			}
 		} catch (
 

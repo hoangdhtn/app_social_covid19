@@ -54,12 +54,15 @@ public class PostsDAO {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<Posts> getAllPostsUser(Integer id_user) {
+	public List<Posts> getAllPostsUser(Integer id_user, int position, int pageSize) {
 		Session session = sessionFactory.getCurrentSession();
 
 		String hql = "from Posts where enabled = 1 and id_user = :id_user order by id desc";
 		Query query = session.createQuery(hql, Posts.class);
 		query.setParameter("id_user", id_user);
+		query.setFirstResult(position);
+		query.setMaxResults(pageSize);
+		
 		List<Posts> list = query.list();
 
 		if (list != null && list.size() > 0) {

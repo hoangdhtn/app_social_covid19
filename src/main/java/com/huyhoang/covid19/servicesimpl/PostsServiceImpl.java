@@ -22,8 +22,8 @@ public class PostsServiceImpl implements PostsService {
 		return postsDAO.getAllPosts( position,  pageSize);
 	}
 	
-	public List<Posts> getAllPostsUser(Integer id_user){
-		return postsDAO.getAllPostsUser(id_user);
+	public List<Posts> getAllPostsUser(Integer id_user, int position, int pageSize){
+		return postsDAO.getAllPostsUser(id_user, position, pageSize);
 	}
 	
 	public List<Posts> getAllPostsInWall(Integer id_user){

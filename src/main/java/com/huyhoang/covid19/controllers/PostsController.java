@@ -59,21 +59,19 @@ public class PostsController {
 	}
 
 	// Get all post user
-	@RequestMapping(value = "/posts/{id_user}", method = RequestMethod.GET, produces = {
+	@RequestMapping(value = "/posts/user/{id_user}/{position}/{pagesize}", method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public ResponseEntity<List<Posts>> getAllPostsUser(@PathVariable(name = "id_user") Integer id_user,
-			@RequestBody Users user) {
+	public ResponseEntity<List<Posts>> getAllPostsUser(@PathVariable(name = "id_user") Integer id_user, @PathVariable(name = "position") Integer position,
+			@PathVariable(name = "pagesize") Integer pagesize) {
 
 		HttpStatus httpStatus = null;
 
 		List<Posts> list = null;
+		list = postsService.getAllPostsUser(id_user, position,pagesize);
 		try {
-			if (id_user == user.getId()) {
-				list = postsService.getAllPostsInWall(id_user);
-				httpStatus = HttpStatus.OK;
-			} else if (id_user != user.getId()) {
-				list = postsService.getAllPostsUser(id_user);
+			if (list != null) {
+				
 				httpStatus = HttpStatus.OK;
 			} else {
 				httpStatus = HttpStatus.BAD_REQUEST;

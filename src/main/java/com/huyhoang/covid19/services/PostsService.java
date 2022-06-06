@@ -13,7 +13,7 @@ public interface PostsService {
 
 	public List<Posts> getAllPosts(int position, int pageSize);
 	
-	public List<Posts> getAllPostsUser(Integer id_user);
+	public List<Posts> getAllPostsUser(Integer id_user, int position, int pageSize);
 	
 	public List<Posts> getAllPostsInWall(Integer id_user);
 	

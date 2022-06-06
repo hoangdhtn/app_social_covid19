@@ -91,12 +91,13 @@ public class UserController {
 			MediaType.MULTIPART_FORM_DATA_VALUE }, consumes = { "multipart/form-data" })
 	@ResponseBody
 	public ResponseEntity<Users> updateUser(@RequestHeader("Authorization") String authHeader,
-			@ModelAttribute Users data, @RequestParam("files") MultipartFile[] files) {
+			@ModelAttribute Users data, @RequestParam(name = "files", required = false) MultipartFile[] files) {
 		String username = jwtService.getUsernameFromToken(authHeader);
 		HttpStatus httpStatus = null;
 
 		Users user = new Users();
 		user = data;
+		System.out.println("up controller" + user);
 		user = usersService.updateUsers(username, data, files);
 
 		try {
@@ -229,6 +230,7 @@ public class UserController {
 	}
 
 	// Signup
+	@SuppressWarnings("unused")
 	@RequestMapping(value = "/signup", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
 	public ResponseEntity<Users> signup(HttpServletRequest request,@Valid @RequestBody Users user) {
